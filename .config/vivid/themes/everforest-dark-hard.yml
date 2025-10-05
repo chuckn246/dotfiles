@@ -1,0 +1,167 @@
+---
+# Everforest Dark (Hard) theme for vivid
+# Adapted from https://github.com/sainnhe/everforest
+
+colors:
+  bg: "282e33"
+  bg0: "272e33"
+  bg1: "2e383c"
+  bg2: "374145"
+  bg3: "414b50"
+  bg4: "495156"
+  bg5: "4f5b58"
+  bgdim: "1e2326"
+
+  fg: "d3c6aa"
+
+  red: "e67e80"
+  orange: "e69875"
+  yellow: "dbbc7f"
+  green: "a7c080"
+  aqua: "83c092"
+  blue: "7fbbb3"
+  purple: "d699b6"
+  grey0: "7a8478"
+  grey1: "859289"
+  grey2: "9da9a0"
+
+
+core:
+  normal_text:
+    foreground: fg
+    background: bg
+
+  regular_file:
+    foreground: fg
+    background: bg
+
+  reset_to_normal: {}
+
+  directory:
+    foreground: blue
+    font-style: bold
+
+  symlink:
+    foreground: purple
+    font-style: bold
+
+  multi_hard_link:
+    foreground: aqua
+
+  fifo:
+    foreground: yellow
+
+  socket:
+    foreground: aqua
+    font-style: bold
+
+  door:
+    foreground: aqua
+    font-style: bold
+
+  block_device:
+    foreground: blue
+    font-style: bold
+
+  character_device:
+    foreground: yellow
+    font-style: italic
+
+  broken_symlink:
+    foreground: red
+    background: bg4
+
+  missing_symlink_target:
+    foreground: bg0
+    background: red
+
+  setuid:
+    foreground: red
+    font-style: bold
+
+  setgid:
+    foreground: yellow
+    font-style: bold
+
+  sticky_other_writable:
+    foreground: bg0
+    background: yellow
+
+  file_with_capability:
+    foreground: bg
+    background: red
+
+  other_writable:
+    foreground: yellow
+
+  sticky:
+    foreground: bg0
+    background: green
+
+  executable_file:
+    foreground: green
+    font-style: bold
+
+
+text:
+  special:
+    foreground: yellow
+    font-style: bold
+
+  todo:
+    foreground: red
+
+  licenses:
+    foreground: grey1
+    font-style: italic
+
+  configuration:
+    foreground: aqua
+
+  other:
+    foreground: fg
+
+
+markup:
+  foreground: yellow
+
+
+programming:
+  source:
+    foreground: fg
+
+  tooling:
+    foreground: aqua
+    font-style: italic
+
+    continuous-integration:
+      foreground: green
+
+
+media:
+  foreground: purple
+
+
+office:
+  foreground: red
+
+
+archives:
+  foreground: orange
+  font-style: underline
+
+  images:
+    foreground: orange
+    font-style: bold
+
+
+executable:
+  foreground: green
+  font-style: bold
+
+
+unimportant:
+  foreground: grey1
+  font-style: italic
+
+# vim: ft=yaml ts=2 sts=2 sw=2 sr et
