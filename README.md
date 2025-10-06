@@ -1,7 +1,7 @@
 ## Vivid
 Create a docker image and mount the theme directory:
 ```bash
-docker run -v "$HOME/.dotfiles/vivid/.config/themes/":"/.config/vivid/themes" --rm -it debian /bin/bash
+docker run -v "$HOME/.dotfiles/vivid/.config/themes/" --rm -it debian /bin/bash
 ```
 
 Enable vi mode:
