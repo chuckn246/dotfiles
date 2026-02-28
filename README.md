@@ -31,3 +31,15 @@ The status bar is fairly basic which looks like this (but with color):
 ```
 
 The active window indicator is also bold.
+
+---
+
+## Terminfo
+The MacOS tmux-256color terminfo lacks `bce` (back color erase).
+When vim loads a colorscheme with termguicolors during startup, it needs to paint the statusline/cmdline area.
+
+Without bce, vim writes colored spaces directly to the normal screen buffer before switching to the alternate screen (`smcup`).
+When vim exits (`rmcup`), those painted lines persist as empty-looking lines since the normal buffer was never cleaned up.
+
+### Installation
+Copy or symlink the database into `~/.terminfo/74/tmux-256color` and reload tmux.
