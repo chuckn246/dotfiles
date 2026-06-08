@@ -9,6 +9,7 @@ brew_binary=''
 if [[ -n "${brew_binary}" ]]; then
   eval "$(${brew_binary} shellenv)"
   export HOMEBREW_NO_ANALYTICS=1
+  export HOMEBREW_REQUIRE_TAP_TRUST=1
 fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
