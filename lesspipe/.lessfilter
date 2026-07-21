@@ -1,0 +1,215 @@
+#!/bin/sh
+
+style=nord
+# lesscolors="pygmentize -f terminal256 -O style=$style"
+lesscolors="bat --color=always"
+
+for path in "$@"; do
+  filename=$(basename "$path")
+  case "$filename" in
+    *.bat|*.bib|*.css|Changelog|*.diff|*.go|*.json|*.jsonld|\
+    *.less|*.patch|*.rs|*.sass|\
+    *.sql|*.tex|*.toc)
+        $lesscolors "$path"
+        ;;
+
+    .htaccess|apache.conf|apache2.conf)
+        $lesscolors -l 'Apache Conf' "$path"
+        ;;
+
+    *.bash|.bashrc|.bash_*|bashrc|bash.*|bash_*|*.ebuild|*.eclass|\
+    *.exheres-0|*.exlib|*_functions|*.ksh|.profile|*.sh|.xinitrc|\
+    .xsession|.xsessionrc|*.zsh|.zshrc|zshrc|PKGBUILD)
+        $lesscolors -l sh "$path"
+        ;;
+
+    *.c|*.h|*.idc)
+        $lesscolors -l c "$path"
+        ;;
+
+    *.cpp|*.hpp|*.c++|*.h++|*.cc|*.hh|*.cxx|*.hxx|*.C|*.H|*.cp|*.CPP)
+        $lesscolors -l cpp "$path"
+        ;;
+
+    *.docker|Dockerfile)
+        $lesscolors -l Dockerfile "$path"
+        ;;
+
+    *.html|*.htm|*.xhtml)
+        $lesscolors -l html "$path"
+        ;;
+
+    *.js|*.jsm|*.mjs)
+        $lesscolors -l js "$path"
+        ;;
+
+    Kconfig*|*Config.in*|external.in*|standard-modules.in)
+        $lesscolors -l kconfig "$path"
+        ;;
+
+    *.dmesg|*.kmsg)
+        $lesscolors -l dmesg "$path"
+        ;;
+
+    *.mak|*.mk|Makefile|makefile|Makefile.*|GNUmakefile)
+        $lesscolors -l make "$path"
+        ;;
+
+    *.md|*.markdown)
+        if command -v pandoc > /dev/null 2>&1; then
+          pandoc -s -f markdown -t man "$path" | groff -T utf8 -man
+        else
+          exit 1
+        fi
+        ;;
+
+    *.pdf)
+        if command -v pdftotext > /dev/null 2>&1; then
+          pdftotext -layout "$path" -
+        else
+          printf '%s\n' "No pdftotext available; try installing poppler-utils"
+        fi
+        ;;
+
+    *.automount|*.cfg|*.device|*.editorconfig|*.inf|*.ini|*.mount|*.path|*.prf|\
+    *.scope|*.service|*.slice|*.socket|*.swap|*.target|*.timer)
+        $lesscolors -l ini "$path";
+        ;;
+
+    *.perl|*.pl|*.pm|*.nqp|*.p6|*.6pl|*.p6l|*.pl6|*.6pm|*.p6m|*.pm6|*.raku|\
+    *.rakumod|*.rakutest|*.rakudoc|*.t)
+        $lesscolors -l pl6 "$path"
+        ;;
+
+    *.php|*.php[345]|*.inc)
+        $lesscolors -l php "$path"
+        ;;
+
+    *.bzl|*.jy|*.py|*.pyw|*.sage|*.sc|*.tac|BUCK|BUILD|BUILD.bazel|\
+      SConstruct|SConscript|WORKSPACE)
+        $lesscolors -l py3 "$path"
+        ;;
+
+    *.S|*.R|.Rhistory|.Rprofile|.Renviron)
+        $lesscolors -l r "$path"
+        ;;
+
+    *.rb|*.rbw|*.rake|*.gemspec|*.rbx|*.duby|Gemfile|Rakefile)
+        $lesscolors -l ruby "$path"
+        ;;
+
+    *.vim|.exrc|.gvimrc|.vimrc|_exrc|_gvimrc|_vimrc|gvimrc|vimrc)
+        $lesscolors -l vim "$path"
+        ;;
+
+    *.xml|*.xsl|*.rss|*.xslt|*.xsd|*.wsdl|*.wsf)
+        $lesscolors -l xml "$path";
+        ;;
+
+    *.yaml|*.yml)
+        $lesscolors -l yaml "$path";
+        ;;
+
+    *)
+        lexer=$(file -b "$path" )
+        case "$lexer" in
+          Bourne-Again[[:space:]]shell[[:space:]]script*)
+            $lesscolors -l sh "$path"
+            ;;
+
+          POSIX[[:space:]]shell[[:space:]]script*)
+            $lesscolors -l sh "$path"
+            ;;
+
+          POSIX[[:space:]]tar[[:space:]]archive*)
+            tar tvvf "$1"
+            ;;
+
+          gzip[[:space:]]compressed[[:space:]]data*) # Test if tar or man
+            if gzip -dc "$1" | file - | grep -q 'tar archive' ; then
+              tar tvvf "$1"
+            elif gzip -dc "$1" | file - | grep -q 'roff' ; then
+              gzip -dc "$1" | nroff -S -mandoc -
+            else
+              gzip -dc "$1"
+            fi
+            ;;
+
+          bzip2[[:space:]]compressed[[:space:]]data*)
+            if bzip2 -dc "$1" | file - | grep -q 'tar archive' ; then
+              tar tvvf "$1"
+            elif bzip2 -dc "$1" | file - | grep -q 'roff' ; then
+              bzip2 -dc "$1" | nroff -S -mandoc -
+            else
+              bzip2 -dc "$1"
+            fi
+            ;;
+
+          cpio[[:space:]]archive)
+            cpio && cpio -it < "$1"
+            ;;
+
+          [Xx][Zz][[:space:]]compressed[[:space:]]data*)
+            if xz -dc "$1" | file - | grep 'tar archive' ; then
+              xz -dc "$1" | tar tvvf -
+            else
+              xz -dc "$1"
+            fi
+            ;;
+
+          data) # Test if lzma archive
+            if xz -t "$1" ; then
+              if xz -F lzma -dc "$1" | file - | grep 'tar archive' ; then
+                xz -F lzma -dc "$1" | tar tvvf -
+              else
+                xz -F lzma -dc "$1"
+              fi
+            else
+              echo "Unrecognized file"
+            fi
+            ;;
+
+          ISO[[:space:]]9660[[:space:]]CD-ROM[[:space:]]filesystem[[:space:]]data*)
+            if command -v isoinfo > /dev/null 2>&1 ; then
+              echo "$1:" ; isoinfo -d -i "$1"
+              echo
+              echo '***Contents:' ; isoinfo -f -i "$1"
+            fi
+            ;;
+
+          Zip[[:space:]]archive[[:space:]]data*)
+            unzip -l "$1"
+            ;;
+
+          RAR[[:space:]]archive[[:space:]]data*)
+            unrar && unrar l "$1"
+            ;;
+
+          # Distributions Packages
+          Debian[[:space:]]binary[[:space:]]package*)
+            if command -v dpkg > /dev/null 2>&1 ; then
+              echo "$1:" ; dpkg --info "$1"
+              echo
+              echo '*** Contents:' ; dpkg-deb --contents "$1"
+            else
+              ar p "$1" data.tar.gz | tar tzvf -
+            fi ;;
+
+          Python)
+            $lesscolors -l python "$path"
+            ;;
+
+          Ruby)
+            $lesscolors -l ruby "$path"
+            ;;
+
+          *)
+            # Hand whatever is left over to lessfile
+            exit 1
+            ;;
+
+        esac
+  esac;
+done
+
+# vim: ft=sh ts=2 sts=2 sw=2 sr et
