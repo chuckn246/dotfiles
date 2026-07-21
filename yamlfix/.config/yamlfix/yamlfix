@@ -1,0 +1,50 @@
+# Error if the same key is defined more than once in a mapping / dictionary
+export YAMLFIX_ALLOW_DUPLICATE_KEYS="false"
+
+# Minimum spacing between the content of a line and the start of an inline-comment
+export YAMLFIX_COMMENTS_MIN_SPACES_FROM_CONTENT="2"
+
+# Enforce a space between the comment indicator and the first character
+export YAMLFIX_COMMENTS_REQUIRE_STARTING_SPACE="true"
+
+# Keep a speficied number of whitelines between lines
+export YAMLFIX_WHITELINES="1"
+
+# Add specific number of consecutive whitelines before a comment-only line
+export YAMLFIX_COMMENTS_WHITELINES="1"
+
+# Number of whitelines before and after a section
+export YAMLFIX_SECTION_WHITELINES="1"
+
+# Add or remove the explicit document start (---) for yaml-files
+export YAMLFIX_EXPLICIT_START="true"
+
+# Transform lists to either flow-style, block-style or leave them as-is
+# Allowed values: flow_style, block_style, keep_style
+export YAMLFIX_SEQUENCE_STYLE="block_style"
+
+# Indentation
+export YAMLFIX_INDENT_MAPPING="2"
+export YAMLFIX_INDENT_OFFSET="2"
+export YAMLFIX_INDENT_SEQUENCE="4"
+
+# Line length
+export YAMLFIX_LINE_LENGTH="85"
+
+# None representation
+# Allowed values: "", null, Null, NULL, ~
+export YAMLFIX_NONE_REPRESENTATION=""
+
+# Quote all simple values in dicts and lists for consistency
+export YAMLFIX_quote_basic_values="false"
+
+# Quote keys and values
+export YAMLFIX_quote_keys_and_basic_values="false"
+
+# Configure which quotation string is used for quoting values
+export YAMLFIX_quote_representation="'"
+
+# Keep quotes as they are
+export YAMLFIX_preserve_quotes="false"
+
+# vim: ft=sh ts=2 sts=2 sw=2 sr et
