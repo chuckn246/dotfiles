@@ -1,0 +1,24 @@
+filename="$1"
+if ! [ -z "$filename" ]; then
+  if ! [ -r "$filename" ]; then
+    cat << EOF > "$filename"
+#!/usr/bin/env python3
+"""
+Description: file
+Author: Chuck Nemeth
+"""
+
+
+
+# vim: ft=python ts=4 sts=4 sw=4 sr et
+EOF
+    #vim +7 -c 'startinsert' "$filename"
+    vim +7 "$filename"
+  else
+    mkuhoh "$filename"
+  fi
+  else
+    printf '%s\n' "Please provide an argument as filename"
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

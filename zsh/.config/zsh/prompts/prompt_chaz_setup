@@ -1,0 +1,172 @@
+# Based off of: /usr/share/zsh/5.8.1/functions/prompt_clint_setup
+# https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#Version-Control-Information
+# https://github.com/zsh-users/zsh/blob/master/Misc/vcs_info-examples
+# https://zsh.sourceforge.io/Doc/Release/Zsh-Modules.html#The-zsh_002fzutil-Module
+
+prompt_chaz_help () {
+  cat <<'EOF'
+
+  prompt chaz [<color1> [<color2> [<color3> [<color4> [<color5>]]]]]
+
+  Defaults are white, blue, green, yellow, and red, respectively.
+
+  Surrounding brackets are '<color1>'
+  User and host are '<color2>'.
+  If root, then user is '<color5>'
+  Current working directory is '<color3>'
+
+  # Additional Prompts (Left of PS1)
+  If SSH connection, display IP address and color user/host orange.
+  Debian chroot and Docker are '<color4>'
+
+  # Additional Prompts (Right of PS1)
+  Git status:
+    - branch name
+    - untracked file (%)
+    - unstaged file (*)
+    - staged file (+)
+    - commits ahead/behind remote (+N/-N)
+
+  # RPROMPT
+  Exit code of last command
+
+EOF
+}
+
+prompt_chaz_setup() {
+  autoload -Uz vcs_info
+
+  zstyle ':vcs_info:*' enable git
+  # zstyle ':vcs_info:*' debug true
+
+  # reason for the duplicate?
+  # zstyle ':vcs_info:*' check-for-changes true
+
+  # Configure vcs_info
+  # zstyle ':vcs_info:git:*' use-simple true
+  zstyle ':vcs_info:*' check-for-changes true
+  zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-st
+  zstyle ':vcs_info:*' stagedstr '+'
+  zstyle ':vcs_info:*' unstagedstr '*'
+  zstyle ':vcs_info:git:*' formats '(%b%u%c%m)'
+  zstyle ':vcs_info:git:*' actionformats '(%b|%a%u%c%m)'
+
+  # Define variables
+  local -a pcc
+  local -A pc
+  local p_cwd p_end p_host p_prefix p_suffix p_user p_vcs
+
+  # Define colors
+  pcc[1]=${1:-'white'}
+  pcc[2]=${2:-${${SSH_CLIENT+'yellow'}:-'blue'}}
+  pcc[3]=${3:-'green'}
+  pcc[4]=${4:-'yellow'}
+  pcc[5]=${5:-'red'}
+
+  # Colored brackets 1: [], 2: <>, 3: ()
+  pc['1o']="%F{$pcc[1]}[%f"
+  pc['1c']="%F{$pcc[1]}]%f"
+  pc['2o']="%F{$pcc[1]}<%f"
+  pc['2c']="%F{$pcc[1]}>%f"
+  pc['3o']="%F{$pcc[1]}(%f"
+  pc['3c']="%F{$pcc[1]}%)%f"
+
+  # Colored prompt items
+  p_prefix="$pc['1o']"
+  p_host="%F{$pcc[2]}%m%f"
+  p_cwd="%F{$pcc[3]}%1~%f"
+  p_suffix="$pc['1c']"
+  p_vcs="%(2v.%2v.)"
+  p_end='%(!.#.$) '
+  p_exit="%F{$pcc[5]}%?%f"
+
+  # Always use red for root sessions, even in ssh
+  if [[ $UID = 0 ]]; then
+    p_user="%F{$pcc[5]}%n%f"
+  else
+    p_user="%F{$pcc[2]}%n%f"
+  fi
+
+  # Connected via ssh?
+  if [[ -n "$SSH_CONNECTION" ]]; then
+    remote_ip='$(echo $SSH_CONNECTION | cut -d" " -f1)'
+  fi
+
+  # Debian chroot?
+  if [[ -r /etc/debian_chroot ]]; then
+    chroot='$(cat /etc/debian_chroot | cut -d" " -f1)'
+    p_prefix="$pc['3o']$chroot$pc['3c']$pc['1o']"
+  fi
+
+  # Running Docker?
+  if [[ -r /.dockerenv ]]; then
+    docker="docker"
+    p_prefix="$pc['3o']$docker$pc['3c']$pc['1o']"
+  fi
+
+  # Build the main prompt
+  PROMPT=$p_prefix$p_user@$p_host:$p_cwd$p_suffix$p_vcs$p_end
+
+  # Build the right prompt
+  # if [[ -n "$remote_ip" ]]; then
+  #   RPROMPT="$pc['3o']$remote_ip$pc['3c'] $p_prefix$p_exit$p_suffix"
+  # else
+  #   RPROMPT="$p_prefix$p_exit$p_suffix"
+  # fi
+
+  add-zsh-hook precmd prompt_chaz_precmd
+}
+
+
+prompt_chaz_precmd() {
+  setopt noxtrace noksharrays localoptions prompt_subst
+  local exitstatus=$?
+  local git_dir git_ref
+
+  psvar=()
+  [[ $exitstatus -ge 128 ]] && psvar[1]=" $signals[$exitstatus-127]" || psvar[1]=""
+
+  [[ -o interactive ]] && jobs -l
+
+  vcs_info
+  [[ -n $vcs_info_msg_0_ ]] && psvar[2]="$vcs_info_msg_0_"
+}
+
+
++vi-git-untracked() {
+  if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+    git status --porcelain | grep -q '^?? ' 2> /dev/null ; then
+    hook_com[staged]+='%'
+  fi
+}
+
+
++vi-git-st() {
+  local ahead behind
+  local -a gitstatus
+
+  # Exit early in case the worktree is on a detached HEAD
+  git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
+
+  local -a ahead_and_behind=(
+    $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
+  )
+
+  ahead=${ahead_and_behind[1]:-0}
+  behind=${ahead_and_behind[2]:-0}
+
+  ahead=${ahead//[[:space:]]/}
+  behind=${behind//[[:space:]]/}
+
+  (( ahead )) && gitstatus+=( " +${ahead}" )
+  (( behind )) && gitstatus+=( " -${behind}" )
+
+  # (( $ahead )) && gitstatus+=( " +${ahead}" )
+  # (( $behind )) && gitstatus+=( " -${behind}" )
+
+  hook_com[misc]+=${(j:/:)gitstatus}
+}
+
+prompt_chaz_setup "$@"
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

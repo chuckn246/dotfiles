@@ -1,0 +1,10 @@
+tnp() {
+  if [[ -z "${TMUX}" ]]; then
+    printf '%s\n' "[ERROR] tnp: not inside a tmux session" >&2
+    return 1
+  else
+    tmux select-pane -T "${1:?tnp: pane name required}"
+  fi
+}
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

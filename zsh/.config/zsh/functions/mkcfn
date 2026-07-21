@@ -1,0 +1,46 @@
+filename="$1"
+if ! [ -z "$filename" ]; then
+  if ! [ -r "$filename" ]; then
+    cat << EOF > "$filename"
+AWSTemplateFormatVersion: 2010-09-09
+
+Description:
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Parameters"
+        Parameters:
+          - InstanceTypeParameter
+
+    ParameterLabels:
+      InstanceTypeParameter: "Instance Type Parameter"
+
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
+
+Mappings:
+
+Resources:
+
+Outputs:
+
+# vim: ft=yaml.cloudformation ts=2 sts=2 sw=2 sr et
+EOF
+    vim "$filename"
+  else
+    mkuhoh "$filename"
+  fi
+  else
+    printf '%s\n' "Please provide an argument as filename"
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

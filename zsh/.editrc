@@ -1,0 +1,21 @@
+bind -v                                         # use vi mode
+# bind
+# bind '^D' vi-list-or-eof
+# bind '^H' vi-delete-prev-char
+# bind '^J' ed-newline
+# bind '^L' ed-clear-screen
+# bind '^R' em-inc-search-prev
+# bind '^U' vi-kill-line-prev
+# bind '^W' ed-delete-prev-word
+# bind '^\' vi-command-mode
+# bind '\E[3~' ed-delete-prev-word                # delete
+# bind '\EOD' vi-prev-word                        # kp_left
+# bind '\EOC' vi-next-word                        # kp_right
+# bind '\E[1;5D' vi-prev-word                     # ctrl_left
+# bind '\E[1;5C' vi-next-word                     # ctrl_right
+# bind '\E[C' ed-next-char                        # right
+# bind '\E[D' ed-prev-char                        # left
+# bind '\E[4~' ed-end-of-file                     # end
+# bind '\E[5~' ed-search-next-history             # pg_up
+# bind '\E[6~' ed-search-prev-history             # pg_down
+

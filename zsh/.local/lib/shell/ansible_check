@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+. "$HOME/.local/lib/shell/color_text"
+
+venv_name="ansible"
+venv_base_dir="$HOME/.local/lib/venv"
+venv_path="${venv_base_dir}/${venv_name}"
+
+ansible_vault_exists() {
+  if ! command -v ansible-vault >/dev/null; then
+    if command -v uv >/dev/null; then
+      printf '%s\n' "[INFO] Installing ansible-core with uv"
+      uv tool install ansible-core
+    elif [ -x "${venv_path}/bin/activate" ]; then
+      # shellcheck source=/dev/null
+      . "${venv_path}/bin/activate"
+    else
+      code_red "[ERROR] Cannot find or install ansible-vault!"
+      code_red "        Tried 'uv' and looked for venv in ${venv_path}"
+      return 1
+    fi
+  fi
+}
+
+# vim: ft=sh ts=2 sts=2 sw=2 sr et

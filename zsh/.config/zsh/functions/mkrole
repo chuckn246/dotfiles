@@ -1,0 +1,15 @@
+dirs=(defaults handlers tasks templates files)
+for dir in "${dirs[@]}"; do
+  mkdir -p "$1"/"$dir";
+done
+
+# Create README
+printf "%s\n" "# ${1:u}" > "$1"/README.md
+
+# Create main.yml in each directory
+for subdir in "${dirs[@]:0:3}"; do
+  printf '%s\n\n%s' "---" "# vim: ft=yaml ts=2 sts=2 sw=2 sr et" \
+    > "$1"/"$subdir"/main.yml;
+done
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

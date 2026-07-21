@@ -1,0 +1,7 @@
+.config/zsh/**/.zcompdump*
+.config/zsh/.zsh_history
+.config/zsh/cache/
+!lib/
+
+*.swp
+.DS_Store

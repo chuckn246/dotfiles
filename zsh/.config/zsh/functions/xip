@@ -1,0 +1,8 @@
+device=$(scutil --dns | awk -F'[()]' '$1~/if_index/ { print $2; exit;}')
+extip=$(curl -s ifconfig.me/ip)
+intip=$(ipconfig getifaddr "$device")
+#ifaceip=$(ifconfig en0 | awk -F' ' '/inet / { print $2 }')
+printf 'Interface IP: %s\n' "${intip}"
+printf 'External IP:  %s\n' "${extip}"
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

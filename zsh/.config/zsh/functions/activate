@@ -1,0 +1,67 @@
+local venv_base_dir
+venv_base_dir="$HOME/.local/lib/venv"
+
+# What to do if fzf is not installed
+no_fzf(){
+  printf '%s\n' "Please use one of the following as an argument:"
+  for dir in $(find "${venv_base_dir}" -type d -maxdepth 1 -mindepth 1); do
+    printf '  - %s\n' "${dir##*/}";
+  done
+  return 0
+}
+
+# What to do if fzf is installed
+yes_fzf(){
+  ls "${venv_base_dir}" | fzf --height=50% \
+    --margin=5%,2%,2%,5% \
+    --border=sharp \
+    --border-label='Select venv to activate' \
+    --header='CTRL-c or ESC to quit'
+}
+
+local selected_env
+
+case "${1}" in
+  '')
+    if command -v fzf; then selected_env=$(yes_fzf); else no_fzf; fi
+    ;;
+  *)
+    selected_env="${1}"
+    ;;
+esac
+
+if [[ -n "${selected_env}" ]]; then
+  local venv_path
+  venv_path="${venv_base_dir}/${selected_env}"
+else
+  return 0
+fi
+
+# Activate the venv
+if [ -d "${venv_path}" ]; then
+  if [ -e "${venv_path}/bin/python3" ]; then
+    source "${venv_path}/bin/activate"
+  else
+    printf '%s\n' "[ERROR] Please use mkvenv script to update the python3 symlinks"
+    return 1
+  fi
+
+  if [ ${venv_path} = "${venv_base_dir}/ansible" ]; then
+    eval $(register-python-argcomplete ansible)
+    eval $(register-python-argcomplete ansible-config)
+    eval $(register-python-argcomplete ansible-console)
+    eval $(register-python-argcomplete ansible-doc)
+    eval $(register-python-argcomplete ansible-galaxy)
+    eval $(register-python-argcomplete ansible-inventory)
+    eval $(register-python-argcomplete ansible-playbook)
+    eval $(register-python-argcomplete ansible-pull)
+    eval $(register-python-argcomplete ansible-vault)
+  fi
+  unset selected_env venv_path
+else
+  printf '%s\n' "[ERROR] No venv has not been configured for ${selected_env}"
+  unset selected_env venv_path
+  return 1
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

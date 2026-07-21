@@ -1,0 +1,7 @@
+. "$HOME/.local/lib/shell/ansible_check"
+
+if ansible_vault_exists; then
+  ansible-vault encrypt "${@}"
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

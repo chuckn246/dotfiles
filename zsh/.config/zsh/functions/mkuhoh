@@ -1,0 +1,26 @@
+# Handle existing file
+if [[ ! -z "$filename" ]]; then
+  while true; do
+    printf '%s\n' "$filename exists!"
+    vared -p "Please choose (e)dit, (d)elete or e(x)it: " -c solution
+    case "$solution" in
+      "E"|"e")
+        vim "$filename"
+        break
+        ;;
+      "D"|"d")
+        rm "$filename"
+        break
+        ;;
+      "X"|"x")
+        printf '%s\n' "Exiting.."
+        break
+        ;;
+      *)
+        printf '%s\n' "Please choose (e)dit, (d)elete or e(x)it"
+        ;;
+    esac
+  done
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

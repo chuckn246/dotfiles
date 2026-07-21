@@ -1,0 +1,47 @@
+# bold output
+code_bold() { tput bold; printf '%s\n' "${1}"; tput sgr0; }
+
+# underline output
+code_ul() { tput smul; printf '%s\n' "${1}"; tput rmul; }
+
+# black output
+code_blk() { tput setaf 0; printf '%s\n' "${1}"; tput sgr0; tput el; }
+code_bblk() { tput bold; tput setaf 0; printf '%s\n' "${1}"; tput sgr0; }
+code_blkbg() { tput setab 0; tput setaf 7; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# red output
+code_red() { tput setaf 1; printf '%s\n' "${1}"; tput sgr0; }
+code_bred() { tput bold; tput setaf 1; printf '%s\n' "${1}"; tput sgr0; }
+code_redbg() { tput setab 1; tput setaf 7; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# green output
+code_grn() { tput setaf 2; printf '%s\n' "${1}"; tput sgr0; }
+code_bgrn() { tput bold; tput setaf 2; printf '%s\n' "${1}"; tput sgr0; }
+code_grnbg() { tput setab 2; tput setaf 0; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# yellow output
+code_yel() { tput setaf 3; printf '%s\n' "${1}"; tput sgr0; }
+code_byel() { tput bold; tput setaf 3; printf '%s\n' "${1}"; tput sgr0; }
+code_yelbg() { tput setab 3; tput setaf 0; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# blue output
+code_blu() { tput setaf 4; printf '%s\n' "${1}"; tput sgr0; }
+code_bblu() { tput bold; tput setaf 4; printf '%s\n' "${1}"; tput sgr0; }
+code_blubg() { tput setab 4; tput setaf 7; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# magenta output
+code_mag() { tput setaf 5; printf '%s\n' "${1}"; tput sgr0; }
+code_bmag() { tput bold; tput setaf 5; printf '%s\n' "${1}"; tput sgr0; }
+code_magbg() { tput setab 5; tput setaf 0; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# cyan output
+code_cya() { tput setaf 6; printf '%s\n' "${1}"; tput sgr0; }
+code_bcya() { tput bold; tput setaf 6; printf '%s\n' "${1}"; tput sgr0; }
+code_cyabg() { tput setab 6; tput setaf 0; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# white output
+code_wht() { tput setaf 7; printf '%s\n' "${1}"; tput sgr0; }
+code_bwht() { tput bold; tput setaf 7; printf '%s\n' "${1}"; tput sgr0; }
+code_whtbg() { tput setab 7; tput setaf 0; printf '%s\n' "${1}"; tput sgr0; tput el; }
+
+# vim: ft=sh ts=2 sts=2 sw=2 sr et

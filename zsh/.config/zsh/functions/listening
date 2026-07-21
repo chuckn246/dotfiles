@@ -1,0 +1,9 @@
+if [ $# -eq 0 ]; then
+    sudo lsof -iTCP -sTCP:LISTEN -n -P
+elif [ $# -eq 1 ]; then
+    sudo lsof -iTCP -sTCP:LISTEN -n -P | grep -i --color $1
+else
+    printf '%s\n'  "Usage: listening [pattern]"
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et

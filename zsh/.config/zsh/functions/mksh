@@ -1,0 +1,23 @@
+filename="$1"
+if ! [ -z "$filename" ]; then
+  if ! [ -r "$filename" ]; then
+    cat << EOF > "$filename"
+#!/bin/sh
+
+# Description:
+# Author: Chuck Nemeth
+
+
+
+# vim: ft=sh ts=2 sts=2 sw=2 sr et
+EOF
+    #vim +6 -c 'startinsert' "$filename"
+    vim +6 "$filename"
+  else
+    mkuhoh "$filename"
+  fi
+  else
+    printf '%s\n' "Please provide an argument as filename"
+fi
+
+# vim: ft=zsh ts=2 sts=2 sw=2 sr et
