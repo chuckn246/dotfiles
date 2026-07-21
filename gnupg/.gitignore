@@ -1,0 +1,7 @@
+**.gnupg/crls.d/
+**.gnupg/private-keys-v1.d/
+**.gnupg/pubring.kbx
+**.gnupg/random_seed
+**.gnupg/reader_0.status
+**.gnupg/tofu.db
+**.gnupg/trustdb.gpg
