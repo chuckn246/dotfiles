@@ -1,0 +1,65 @@
+#!/bin/sh
+
+#
+# ansible-vault-merge: helper script for merging changes in ansible-vault file
+# https://github.com/building5/ansible-vault-tools/blob/master/ansible-vault-merge.sh
+#
+
+PROGNAME=$(basename "${0}")
+
+usage() {
+    cat <<EOF
+usage: ${PROGNAME} [OPTION]... [--] BASE CURRENT OTHER [LOCATION]
+
+  -h, --help Display this help
+EOF
+}
+
+while test $# -gt 0; do
+    case $1 in
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        -*)
+            printf '%s\n' "${PROGNAME}: unknown option ${1}" >&2
+            usage >&2
+            exit 1
+            ;;
+        *)
+            # probably the first positional argument
+            break
+    esac
+done
+
+if test $# -lt 3; then
+    printf '%s\n' "${PROGNAME}: not enough arguments" >&2
+    usage >&2
+    exit 1
+fi
+
+BASE=$1
+CURRENT=$2
+OTHER=$3
+LOCATION=$4
+
+set -e
+
+printf '%s\n' "ansible-vault-merge ${LOCATION}"
+
+ansible-vault decrypt "$BASE" > /dev/null
+ansible-vault decrypt "$CURRENT" > /dev/null
+ansible-vault decrypt "$OTHER" > /dev/null
+
+if ! git merge-file -L CURRENT -L BASE -L OTHER "${CURRENT}" "${BASE}" "${OTHER}"; then
+    printf '%s\n' "Merge conflict; opening editor to resolve." >&2
+    ${EDITOR:-vi} "${CURRENT}"
+fi
+
+ansible-vault encrypt "${CURRENT}"
+
+# vim: ft=sh ts=4 sts=4 sw=4 sr et

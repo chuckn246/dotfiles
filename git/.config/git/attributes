@@ -1,0 +1,21 @@
+*.doc             diff=lesspipe
+*.docx            diff=lesspipe
+*.epub            diff=lesspipe
+*.gif             diff=lesspipe
+*.odt             diff=lesspipe
+*.pdf             diff=lesspipe
+*.png             diff=lesspipe
+*.ppt             diff=lesspipe
+*.pptx            diff=lesspipe
+*.rtf             diff=lesspipe
+*.xls             diff=lesspipe
+*.xlsx            diff=lesspipe
+*.ja              diff=lesspipe
+*.jar             diff=lesspipe
+*.jpeg            diff=lesspipe
+*.jpg             diff=lesspipe
+*.7z              diff=lesspipe
+*.rar             diff=lesspipe
+vault.yaml        diff=ansible-vault grep=ansible-vault
+vault.yml         diff=ansible-vault grep=ansible-vault
+*.vault.*         diff=ansible-vault grep=ansible-vault

@@ -1,0 +1,219 @@
+[alias]
+  g = grep --textconv
+  glog = log --all --decorate --graph
+
+
+[branch]
+  # Sort branches by most recent commit first
+  sort = -committerdate
+
+
+[color]
+  # Enable color in all output
+  ui = true
+
+
+[column]
+  # Automatically format output in columns when it fits
+  ui = auto
+
+  # Disable column display for branch lists (for clarity)
+  branch = never
+
+
+[commit]
+  # Sign all commits by default
+  gpgsign = true
+
+  # Use predefined commit message template
+  template = ~/.config/git/commit_template.txt
+
+  # Include diff in commit messages for context
+  verbose = true
+
+
+[core]
+  # Open editor at first empty line for commit messages
+  editor = vim +'silent! call search(\"^$\",\"W\")' +startinsert +nohlsearch
+
+  # Use less as pager
+  pager = less
+
+  # Convert CRLF to LF on commit, leave LF alone on checkout
+  autocrlf = input
+
+  # Global gitattributes file
+  attributesfile = ~/.config/git/attributes
+
+  # Global gitignore file
+  excludesfile = ~/.config/git/ignore
+
+  # Warn/fix certain whitespace issues
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+
+
+[diff]
+  # More human-friendly diff algorithm
+  algorithm = histogram
+
+  # Show moved lines without colorizing
+  colorMoved = plain
+
+  # Ignore indentation changes when detecting moved code
+  colorMovedWS = allow-indentation-change
+
+  # Use "i/" and "w/" prefixes instead of a/b
+  mnemonicPrefix = true
+
+  # Detect file renames
+  renames = true
+
+  # Use vimdiff for diffs
+  tool = vimdiff
+
+
+[diff "ansible"]
+  xfuncname = ^\\s*\\[.*\\]$
+
+
+[diff "ansible-vault"]
+  # Decrypt vault for diff
+  textconv = ansible-vault view
+
+  # Do not cache the vault contents
+  cachetextconv = false
+
+
+[diff "lesspipe"]
+  # Use lesspipe for previews
+  textconv = LESSQUIET=1 lesspipe.sh
+
+  # Treat as binary for certain ops
+  binary = true
+
+  # Cache results
+  cachetextconv = true
+
+
+[fetch]
+  # Auto-remove remote-tracking branches that no longer exist
+  prune = true
+
+
+[format]
+  # Default pretty print style (see [pretty])
+  pretty = one
+
+
+[gpg]
+  # Use SSH key signing instead of GPG
+  format = ssh
+
+
+[grep "ansible-vault"]
+  # Decrypt vault before grep
+  textconv = ansible-vault view
+
+  # Cache results for speed
+  cachetextconv = true
+
+
+[help]
+  # Prompt before running auto-corrected commands
+  autoCorrect = prompt
+
+
+[init]
+  # Use "main" instead of "master" for new repos
+  defaultBranch = main
+
+
+[merge]
+  # Show base version in conflict markers
+  conflictstyle = diff3
+
+  # Use vimdiff for merge resolution
+  tool = vimdiff
+
+
+[merge "ansible-vault"]
+  # Custom merge driver for vault files
+  name = ansible-vault merge driver
+  driver = ~/.local/bin/ansible-vault-merge -- %O %A %B %P
+
+
+[pretty]
+  # Date, hash, subject, refs
+  one = format:%C(green)%as %C(auto)%h%C(reset) %s%C(auto)%d%C(reset)
+
+  # Date, author, email, hash, subject, refs
+  two = format:%C(green)%as %C(blue)%aN <%aE>%n%C(auto)%h%C(reset) %s%C(auto)%d%C(reset)%n
+
+
+[pull]
+  # Rebase instead of merge on pull
+  rebase = true
+
+
+[push]
+  # Push current branch to matching remote branch
+  default = current
+
+  # Automatically set upstream for new branches
+  autoSetupRemote = true
+
+  # Push tags when pushing commits
+  followTags = true
+
+
+[rebase]
+  # Automatically reorder fixup!/squash! commits
+  autosquash = true
+
+  # Auto-stash changes before rebasing
+  autostash = true
+
+  # Show diffstat of what changed upstream since the last rebase
+  stat = true
+
+
+[status]
+  # Short output
+  short = true
+
+  # Show branch info
+  branch = true
+
+  # Show stash info
+  showStash = true
+
+  # Show files which are not currently tracked by Git
+  showUntrackedFiles = all
+
+
+[tag]
+  # Sort tags in version order
+  sort = version:refname
+
+
+[user]
+  # User name for commits
+  name = Chuck Nemeth
+
+  # Email for commits
+  email = chuckn246@gmail.com
+
+  # Path to SSH public key for signing
+  signingkey = ~/.ssh/keys/git/git_signing.pub
+
+
+[web]
+  # Default browser for git web commands
+  browser = Firefox
+
+
+[browser "Firefox"]
+  # Custom script for opening browser
+  cmd = ~/.config/git/web--browse.sh
+
+# vim: ft=gitconfig ts=2 sts=2 sw=2 sr et

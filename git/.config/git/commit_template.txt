@@ -1,0 +1,27 @@
+# Add: Create a capability e.g. feature, test, dependency.
+# Drop: Delete a capability e.g. feature, test, dependency.
+# Fix: Fix an issue e.g. bug, typo, accident, misstatement.
+# Bump: Increase the version of something e.g. a dependency.
+# Make: Change the build process, or tools, or infrastructure.
+# Start: Begin doing something; e.g. enable a toggle, feature flag, etc.
+# Stop: End doing something; e.g. disable a toggle, feature flag, etc.
+# Optimize: A change that MUST be just about performance, e.g. speed up code.
+# Document: A change that MUST be only in the documentation, e.g. help files.
+# Refactor: A change that MUST be just a refactoring patch
+# Reformat: A change that MUST be just a formatting path, e.g. change spaces.
+# Rearrange: A change that MUST be just an arranging patch, e.g. change layout.
+# Redraw: A change that MUST be just a drawing patch, e.g. change a graphic, image, icon, etc.
+# Reword: A change that MUST be just a wording patch, e.g. change a comment, label, doc, etc.
+# Revise: A change that MUST be just a revising patch e.g. a change, an alteration, a correction, etc.
+# Refit/Refresh/Renew/Reload: A change that MUST be just a patch e.g. update test data, API keys, etc.
+# Capitialize, imperative, no ending period
+# First word from above -- max of 50 ------------|
+
+
+# Explain what and why this change, not HOW.  -------------------------|
+# Trouble explaining? Split commits with `git add -p`
+
+# Any references to tickets, articles, or other resources at end.
+# Ticket: #123      Resolves: #123
+# Closes: #123      See also: #456, #789
+# -------------------------------------
