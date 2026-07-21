@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+dirs=(~/.vim ~/.vim/after ~/.vim/ftdetect ~/.vim/ftplugin)
+
+# Delete old symlinks
+find "$HOME/.vim" -type l ! -path "$HOME/.vim/plugged/*" -delete
+
+for d in "${dirs[@]}"; do
+  if [ ! -d "${d}" ]; then
+    mkdir -p "${d}"
+  fi
+
+  if [ -f ~/.vimrc ]; then
+    rm -f ~/.vimrc
+  fi
+done
+
+# vim: ft=sh ts=2 sts=2 sw=2 sr et

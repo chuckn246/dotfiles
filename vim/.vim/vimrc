@@ -1,0 +1,547 @@
+"------------------------------------------------------------
+" Plugins
+"------------------------------------------------------------
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+
+" Core plugins
+Plug 'dense-analysis/ale'             " ALE: async linting and fixers
+Plug 'junegunn/fzf'                   " Fuzzy finder binary and installer helper
+Plug 'junegunn/fzf.vim'               " Vim integration for fzf
+Plug 'kshenoy/vim-signature'          " Marks/sign column helper
+" Plug 'mattn/emmet-vim'               " HTML/CSS abbreviation expansion
+Plug 'tpope/vim-commentary'           " Easy commenting (gc)
+Plug 'tpope/vim-fugitive'             " Git integration (:G status, etc.)
+Plug 'tpope/vim-repeat'               " Repeat vim motions with .
+Plug 'tpope/vim-surround'             " Wrap words,etc with quotes or brackets
+
+" Filetypes
+Plug 'hashivim/vim-terraform'         " Terraform filetype/syntax
+" Plug 'stephpy/vim-yaml'             " YAML improvements
+
+" Aesthetics
+" Plug 'sainnhe/edge'
+Plug 'sainnhe/everforest'
+" Plug 'sainnhe/sonokai'
+
+call plug#end()
+
+" Enable matchit (improves % matching for some filetypes)
+runtime macros/matchit.vim
+
+
+"------------------------------------------------------------
+" FZF
+"------------------------------------------------------------
+if executable('fzf')
+  if exists('$TMUX')
+    let g:fzf_layout = { 'tmux': '90%,70%' }
+  else
+    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+  endif
+endif
+
+
+"------------------------------------------------------------
+" Theming
+"------------------------------------------------------------
+if has('termguicolors')
+  set termguicolors                       " Use 24-bit color
+endif
+
+set background=dark                       " Available values: 'dark', 'light'
+
+" Everforest
+let g:everforest_background = 'hard'     " Available values: 'hard', 'medium', 'soft'
+let g:everforest_better_performance = 1  " Available values: 0, 1
+colorscheme everforest
+
+" Habamax
+" colorscheme habamax
+
+" Git merge conflict colors - :help syn-pattern
+function! ConflictsHighlight() abort
+    syntax match conflictMarker "^\(<<<<<<<.*\||||||||.*\|>>>>>>>.*\|=======\)$"
+    highlight conflictMarker ctermfg=208
+endfunction
+
+augroup conflictColors
+    autocmd!
+    autocmd BufEnter * call ConflictsHighlight()
+augroup END
+
+
+"------------------------------------------------------------
+" General
+"------------------------------------------------------------
+filetype indent plugin on              " Guess filetype based on name & contents
+syntax on                              " Enable syntax highlighting
+
+set encoding=utf8                      " Set utf8 as standard encoding
+set autoindent                         " Copy indent from current line on new line
+set backspace=indent,eol,start         " Backspace over indent, eol and start
+set complete+=kspell                   " Set matches for completion
+set completeopt=menuone,noselect       " Options for completion
+set confirm                            " Ask to save changed files
+set dictionary+=/usr/share/dict/words  " Set dictionary file location
+set expandtab                          " Use spaces instead of tabs
+set ffs=unix,dos,mac                   " Set Unix as standard file type
+set hidden                             " Switch buffers without saving first
+set hlsearch                           " Highlight searches
+set ignorecase                         " Use case insensitive search
+set incsearch                          " Highlight as you type a search term
+" set mouse=a                            " Enable use of the mouse for all modes
+set nospell                            " Disable spellcheck
+set nostartofline                      " Keep cursor column when jumping to buffer
+set notimeout                          " Do not time out mapped sequences
+set ttimeout                           " Time out keycodes, not mappings
+set ttimeoutlen=200                    " Milliseconds to wait for keycodes
+set omnifunc=syntaxcomplete#Complete   " Enable Omni Completion
+set path=.,**                          " Search current dir and recursively for :find
+set previewheight=25                   " Bigger preview window (eg. ALEInfo)
+set shiftwidth=2                       " Indent width for >> << and autoindent
+set shortmess+=c                       " Compact messages (avoid ins-completion-menu messages)
+set signcolumn=yes                     " Keep sign column always visible to prevent text shifting
+set smartcase                          " If query has uppercase, search becomes case-sensitive
+set softtabstop=2                      " Number of spaces TAB acts like in insert mode
+set spelllang=en_us                    " Set spellcheck to en_us
+set splitbelow                         " New horizontal splits go below current window
+set splitright                         " New vertical splits go right of current window
+set t_vb=                              " Neither flash nor beep
+set visualbell                         " Visual bell instead of beeping
+
+
+"------------------------------------------------------------
+" Visual Helpers
+"------------------------------------------------------------
+set cmdheight=2                        " Set command window height to 2 lines
+set colorcolumn=80                     " Highlight column 80
+set cursorline                         " Highlight current line
+set laststatus=2                       " Always display the status line
+set list                               " Enable marking whitespace, tabs, etc.
+set listchars=tab:»\                   " Mark tabs
+set listchars+=extends:›               " Set last column mark
+set listchars+=precedes:‹              " Set first column mark
+set listchars+=nbsp:·                  " Set non breakable space mark
+set listchars+=lead:.                  " Set leading whitespace mark
+set listchars+=trail:·                 " Set trailing whitespace mark
+set modeline                           " Set filetype and indentation via comment
+set modelines=3                        " Look for modeline in bottom 3 lines
+set relativenumber                     " line numbers counting away from cursor
+set ruler                              " Cursor position in the status line
+set showcmd                            " Show commands in last line of screen
+set wildmenu                           " Better command-line completion
+set wildmode=longest:full,full         " Completion mode
+
+
+"------------------------------------------------------------
+" Diff
+"------------------------------------------------------------
+set diffopt=closeoff                   " Disable diff when one window is remaining
+set diffopt+=filler                    " Insert filler lines to keep text visually aligned
+set diffopt+=inline:char               " Character-by-character diff within each diff block
+set diffopt+=linematch:80              " Allow matching similar lines to each other
+set diffopt+=vertical                  " Ensure diffs open in a vertical split
+
+" https://github.com/agude/dotfiles/issues/2#issuecomment-843639956
+if !(has('mac') && $VIM == '/usr/share/vim') && has('patch-8.2.0000')
+    set diffopt+=indent-heuristic      " Prefer diff matches that respect code structure
+    set diffopt+=internal              " Use Vim’s internal diff engine
+    set diffopt+=algorithm:histogram   " Set diff algorithm
+endif
+
+
+"------------------------------------------------------------
+" Folding
+"------------------------------------------------------------
+set foldmethod=indent                  " Set fold method to indent
+set nofoldenable                       " Don't fold initially
+set foldcolumn=2                       " Show folds in sidebar
+
+" Set manual folding from indent mode when attempting to define a fold with zf
+nnoremap <expr> zf (&foldmethod == 'indent'
+      \ ? '<cmd>setlocal foldmethod=manual<CR>zf'
+      \ : 'zf')
+
+" Set manual folding from indent mode when attempting to delete a fold with zd
+nnoremap <expr> zd (&foldmethod == 'indent'
+      \ ? '<cmd>setlocal foldmethod=manual<CR>zd'
+      \ : 'zd')
+
+
+"------------------------------------------------------------
+" Statusline
+"------------------------------------------------------------
+set statusline=%f                         " Filepath
+set statusline+=\                         " A space
+set statusline+=%y                        " Filetype
+set statusline+=\ %{FugitiveStatusline()} " Current branch & edited file's commit
+set statusline+=\ %m                      " Modified flag
+set statusline+=%*                        " Restore default highlight
+set statusline+=%=                        " Split the left and right sides
+set statusline+=%3c                       " Column number
+set statusline+=\ \|\                     " A separator
+set statusline+=\                         " A space
+set statusline+=%l/%L                     " Line number/Total lines
+set statusline+=\                         " A space
+set statusline+=%p%%                      " Position in percentage
+set statusline+=\                         " A space
+
+
+"------------------------------------------------------------
+" File Browsing
+"------------------------------------------------------------
+let g:netrw_banner=0                   " Don't show text at top of file tree
+let g:netrw_browse_split=4             " Open in same buffer as existing file
+let g:netrw_winsize=20                 " Set file tree at 20% of window width
+let g:netrw_liststyle=3                " Set file list style
+let g:netrw_list_hide='\(^\|\s\s\)\zs\.\S\+,__pycache__,.DS_Store,.idea,.git,.venv,node_modules,*\.o,*\.pyc,.*\.swp'
+
+let g:netrw_preview = 0                " Horizontal or Vertical preview window
+let g:netrw_browse_split = 0           " Replace netrw with chosen file (no tiny preview window)
+
+let g:netrw_alto = 1                   " Split position
+let g:netrw_altv = 1                   " Make vertical splits always open on the right
+let g:netrw_keepdir = 0                " Let netrw cd into directories normally instead of forcing the cwd to stay fixed
+
+
+"------------------------------------------------------------
+" File Searching
+" https://gist.github.com/romainl/56f0c28ef953ffc157f36cc495947ab3
+"------------------------------------------------------------
+if executable('rg')
+    " Use ripgrep for :grep with vimgrep-style output and hidden files
+    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --hidden
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
+
+function! Grep(...)
+    " Run grepprg with given args and return the shell output
+    return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
+endfunction
+
+command! -nargs=+ -complete=file_in_path -bar Grep  cgetexpr Grep(<f-args>)
+command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr Grep(<f-args>)
+
+cnoreabbrev <expr> grep  (getcmdtype() ==# ':' && getcmdline() ==# 'grep')  ? 'Grep'  : 'grep'
+cnoreabbrev <expr> lgrep (getcmdtype() ==# ':' && getcmdline() ==# 'lgrep') ? 'LGrep' : 'lgrep'
+
+augroup quickfix
+    autocmd!
+    autocmd QuickFixCmdPost cgetexpr cwindow
+    autocmd QuickFixCmdPost lgetexpr lwindow
+augroup END
+
+" Auto-open location list after LGrep
+autocmd QuickFixCmdPost lgrep,lgrepadd,lmake nested lwindow
+
+" Auto-close the list when selecting an entry
+autocmd FileType qf nnoremap <buffer> <CR> <CR>:lclose<CR>
+
+
+"------------------------------------------------------------
+" Mappings
+"------------------------------------------------------------
+" Set leader to spacebar
+let mapleader=" "
+
+" Typo fixes: :W, :Q, :Wq, :WQ behave as common commands
+command! W w
+command! Q q
+command! Wq wq
+command! WQ wq
+
+" Source Vim config file
+nnoremap <leader>sv :source $MYVIMRC<CR>
+
+" Move between splits with <space>+[h,j,k,l]
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+
+" System clipboard
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
+
+" File browser
+nnoremap <leader>pv :vertical Lexplore<CR>
+
+" Buffers
+nnoremap gb :ls<CR>:buffer<Space>
+nnoremap <leader>b :buffer *
+
+" Find (note: expansion via 'path')
+nnoremap <leader>f :find *
+
+" Tab navigaton
+" TODO: this cycles through actual terminal tabs, not vim tabs.
+" nnoremap <C-S-TAB> :tabprevious<CR>
+" nnoremap <C-TAB>   :tabnext<CR>
+
+" Turn off search highlighting until the next search
+nnoremap <C-L> :nohl<CR><C-L>
+
+" Tab to cycle autocomplete selections
+inoremap <expr> <TAB> pumvisible() ? '<C-n>' : '<TAB>'
+inoremap <expr> <S-TAB> pumvisible() ? '<C-p>' : '<TAB>'
+" inoremap <expr> <Tab> pumvisible() ? '<C-n>' : col('.') > 1 && getline('.')[col('.')-2] =~ '\k' ? '<C-x><C-o>' : '<Tab>'
+" inoremap <expr> <S-Tab> pumvisible() ? '<C-p>' : '<Tab>'
+
+" Use <F11> to toggle paste
+set pastetoggle=<F11>
+
+
+"------------------------------------------------------------
+" ALE
+"------------------------------------------------------------
+" Navigate ALE errors
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+nnoremap <leader>af :ALEFix<CR>
+nnoremap <leader>at :ALEToggle<CR>
+
+
+"------------------------------------------------------------
+" Modeline
+" https://vim.fandom.com/wiki/Modeline_magic#Adding_a_modeline
+"------------------------------------------------------------
+function! AppendModeline()
+    let l:modeline = printf("vim: ft=%s ts=%d sts=%d sw=%d %ssr %set",
+        \ &filetype, &tabstop, &softtabstop, &shiftwidth,
+        \ &shiftround ? '' : 'no', &expandtab ? '' : 'no')
+    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
+    call append(line("$"), "")
+    call append(line("$"), l:modeline)
+endfunction
+
+nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
+
+
+" ---------------------------------------------------------------------------
+" pass(1) secure editing
+" ---------------------------------------------------------------------------
+function! s:is_pass_tempfile(path) abort
+  " Resolve symlinks, normalize
+  let l:real = resolve(a:path)
+
+  " Match macOS or Linux style temp files created by pass
+  return l:real =~# '/\v(pass\.[^/]+/[^/]+\.txt)$'
+endfunction
+
+" Apply 'sterile' settings to this buffer
+function! s:apply_pass_security() abort
+  setlocal filetype=PASS
+
+  " Prevent any disk traces
+  setlocal noswapfile
+  setlocal nobackup
+  setlocal nowritebackup
+  setlocal noundofile
+  setlocal viminfo=
+  if exists('+shada')
+    setlocal shada=
+  endif
+
+  " Disable spell, conceal, etc. for clarity
+  setlocal nospell
+  setlocal conceallevel=0
+
+  " Mark buffer as a pass buffer
+  let b:pass_editing = 1
+endfunction
+
+" Auto-detect pass buffers on read or new file
+augroup redact_pass
+  autocmd!
+  autocmd BufReadPost,BufNewFile * if s:is_pass_tempfile(expand('<afile>:p')) | call s:apply_pass_security() | endif
+augroup END
+
+
+"------------------------------------------------------------
+" Pastebins
+" https://gist.github.com/romainl/1cad2606f7b00088dda3bb511af50d53
+"------------------------------------------------------------
+if has('linux')
+    " Sometimes vpaste only copies 'Spam check...'
+    command! -range=% VP <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net
+        \| tr -d '\n' | xclip -i -selection clipboard
+    command! -range=% PP <line1>,<line2>w !curl -F 'file=@-;' https://envs.sh
+        \| tr -d '\n' | xclip -i -selection clipboard
+elseif has('osx')
+    " Sometimes vpaste only copies 'Spam check...'
+    command! -range=% VP <line1>,<line2>w !curl -F 'text=<-' http://vpaste.net
+        \| tr -d '\n' | pbcopy
+    command! -range=% PP <line1>,<line2>w !curl -F 'file=@-;' https://envs.sh
+        \| tr -d '\n' | pbcopy
+endif
+
+
+"------------------------------------------------------------
+" Registers
+" https://stackoverflow.com/a/39348498
+"------------------------------------------------------------
+function! ClearRegs() abort
+    let regs=split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', '\zs')
+    for r in regs
+        call setreg(r, @_)
+    endfor
+endfunction
+
+command! Cleareg call ClearRegs()
+
+
+"------------------------------------------------------------
+" Spellcheck
+"------------------------------------------------------------
+" Toggle spell check.
+nnoremap <F5> :setlocal spell!<CR>
+
+" Compile wordlists in case of manual changes or new files
+function! SpellUpdate()
+    for d in globpath(&runtimepath, "spell/*.add", 0, 1)
+        execute "mkspell! " . fnameescape(d)
+    endfor
+endfunction
+
+command! SpellUpdate call SpellUpdate()
+
+
+"------------------------------------------------------------
+" Sudo write
+"------------------------------------------------------------
+function! Sudow()
+    :w !sudo tee % > /dev/null
+endfunction
+
+command! Sudow call Sudow()
+
+
+"------------------------------------------------------------
+" Terminal
+"------------------------------------------------------------
+nmap <F6> :tabnew :term ++close<CR>
+tnoremap <F6> <C-W>N
+
+nnoremap <leader>t :term ++close<cr>
+nnoremap <leader>T :vert term ++close<cr>
+
+" terminal in new tab
+" map <leader>tt :tab term ++close<cr>
+" map <leader>T :tab term ++curwin ++close<cr>
+
+
+"------------------------------------------------------------
+" Undo / Backup / Swap
+"------------------------------------------------------------
+let s:vim_home = expand('~/.vim')
+let s:cache_dir = s:vim_home . '/cache'
+let s:backup_dir = s:cache_dir . '/backup'
+let s:swap_dir = s:cache_dir . '/swap'
+let s:undo_dir = s:cache_dir . '/vimundo'
+
+let s:vim_dirs = [s:cache_dir, s:backup_dir, s:swap_dir, s:undo_dir]
+for s:dir in s:vim_dirs
+  if !isdirectory(s:dir)
+    call mkdir(s:dir, 'p', 0700)
+  endif
+endfor
+
+set dir=~/.vim/cache/swap//
+set backupdir=~/.vim/cache/backup//
+
+" set nobackup
+" set nowritebackup
+"
+function Tmpwatch(path, days)
+    let l:path = expand(a:path)
+    if isdirectory(l:path)
+        for file in split(globpath(l:path, "*"), "\n")
+            if localtime() > getftime(file) + 86400 * a:days && delete(file) != 0
+                echo "Tmpwatch(): Error deleting '" . file . "'"
+            endif
+        endfor
+    else
+        echo "Tmpwatch(): Directory '" . l:path . "' not found"
+    endif
+endfunction
+
+if exists("+undofile")
+    set undodir=~/.vim/cache/vimundo//
+    set undofile
+    set undolevels=1000
+    set undoreload=10000
+    call Tmpwatch(&undodir, 31) " Delete undo files which haven't been modified for 31 days
+endif
+
+
+"------------------------------------------------------------
+" Viminfo
+"------------------------------------------------------------
+set viminfo=%,'100,/50,:100,<500,h,n~/.vim/cache/viminfo
+"           | |    |    |   |    | + viminfo file path
+"           | |    |    |   |    + disable 'hlsearch' when loading viminfo
+"           | |    |    |   + save lines for each register
+"           | |    |    + save command-line history
+"           | |    + save search history
+"           | + save file marks
+"           + save/restore buffer list
+
+
+"------------------------------------------------------------
+" Whitespace
+"------------------------------------------------------------
+" Flag unnecessary whitespace
+highlight ExtraWhitespace ctermbg=1 ctermfg=0
+
+" Track match ID so we can delete/refresh it cleanly
+let g:trailing_ws_id = -1
+
+function! HighlightTrailingWS()
+  " Skip special buffers where trailing space is intentional
+  if &buftype != '' || &filetype ==# 'help' || &filetype ==# 'gitcommit'
+    return
+  endif
+
+  " Clear existing match, if any
+  if g:trailing_ws_id != -1
+    silent! call matchdelete(g:trailing_ws_id)
+    let g:trailing_ws_id = -1
+  endif
+
+  " Choose pattern based on mode:
+  if mode() ==# 'i'
+    " Insert: avoid highlighting under cursor
+    let g:trailing_ws_id = matchadd('ExtraWhitespace', '\%#\@<!\s\+$')
+  else
+    " Normal: highlight all trailing space
+    let g:trailing_ws_id = matchadd('ExtraWhitespace', '\s\+$')
+  endif
+endfunction
+
+augroup showTrailingWS
+  autocmd!
+  " Update highlighting when entering/leaving insert mode or buffer
+  autocmd InsertEnter,InsertLeave * call HighlightTrailingWS()
+  autocmd BufEnter * call HighlightTrailingWS()
+  autocmd ColorScheme * call HighlightTrailingWS()  " survive theme changes
+augroup END
+
+" Remove trailing whitespace without moving the cursor
+function! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfunction
+
+" Trigger whitespace cleanup
+noremap <leader>w :call TrimWhitespace()<CR>
+
+" vim: ft=vim ts=2 sts=2 sw=2 nosr et
