@@ -1,11 +1,16 @@
 # Performance profiling (uncomment to enable)
 # zmodload zsh/zprof
 
+export ZSH_CACHE_DIR="${XDG_CACHE_HOME}/zsh"
+export ZCOMPDUMP="${ZSH_CACHE_DIR}/completions/zcompdump"
+
 # Load all stock functions (from $fpath files) called below.
 autoload -U compaudit zmv zrecompile
 
 # Source environment setup (FZF, LS_COLORS, etc.)
-source "$ZDOTDIR/lib/environment.zsh"
+if [ -r "${ZDOTDIR}/lib/environment.zsh" ]; then
+  source "${ZDOTDIR}/lib/environment.zsh"
+fi
 
 # Plugins
 plugins=(direnv gpg-agent vi-mode)
@@ -16,20 +21,20 @@ is_plugin() {
     || builtin test -f $base_dir/plugins/$name/_$name
 }
 
-for plugin ($plugins); do
-  if is_plugin "$ZDOTDIR" "$plugin"; then
-    (( ${fpath[(Ie)"$ZDOTDIR/plugins/$plugin"]} )) \
-      || fpath=("$ZDOTDIR/plugins/$plugin" $fpath)
-    source "$ZDOTDIR/plugins/$plugin/$plugin.plugin.zsh"
+for plugin (${plugins}); do
+  if is_plugin "${ZDOTDIR}" "${plugin}"; then
+    (( ${fpath[(Ie)"${ZDOTDIR}/plugins/${plugin}"]} )) \
+      || fpath=("${ZDOTDIR}/plugins/${plugin}" ${fpath})
+    source "${ZDOTDIR}/plugins/${plugin}/${plugin}.plugin.zsh"
   else
-    printf '%s\n' "Plugin '$plugin' not found"
+    printf '%s\n' "Plugin '${plugin}' not found"
   fi
 done
 
 unset plugin is_plugin
 
 # Config files
-for config_file ("$ZDOTDIR"/lib/*.zsh(N)); do
+for config_file ("${ZDOTDIR}"/lib/*.zsh(N)); do
   source "${config_file}"
 done
 
@@ -62,8 +67,8 @@ zle -N bracketed-paste bracketed-paste-magic
 # Prompt
 setopt prompt_subst
 
-if [ -d "$ZDOTDIR"/prompts ]; then
-  fpath=("$ZDOTDIR"/prompts $fpath)
+if [ -d "${ZDOTDIR}"/prompts ]; then
+  fpath=("${ZDOTDIR}"/prompts ${fpath})
   autoload -Uz prompt_chaz_setup
   prompt_chaz_setup
 fi
@@ -80,12 +85,12 @@ if command -v fnm >/dev/null 2>&1; then
 fi
 
 # Yamlfix
-if [[ -f "$HOME/.config/yamlfix/yamlfix" ]]; then
-  source "$HOME/.config/yamlfix/yamlfix"
+if [[ -f "${HOME}/.config/yamlfix/yamlfix" ]]; then
+  source "${HOME}/.config/yamlfix/yamlfix"
 fi
 
 # SSH key loading
-source "$ZDOTDIR/lib/ssh.zsh"
+source "${ZDOTDIR}/lib/ssh.zsh"
 
 # Performance profiling output (uncomment to enable)
 # zprof

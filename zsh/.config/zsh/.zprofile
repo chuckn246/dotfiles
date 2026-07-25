@@ -2,16 +2,11 @@
 typeset -U path fpath
 
 # If Homebrew is installed, initialize its environment
-brew_binary=''
-[[ -x "/opt/homebrew/bin/brew" ]] && brew_binary="/opt/homebrew/bin/brew"
-
-# Prepend Homebrew paths if available
-if [[ -n "${brew_binary}" ]]; then
-  eval "$(${brew_binary} shellenv)"
-  export HOMEBREW_NO_ANALYTICS=1
-  export HOMEBREW_REQUIRE_TAP_TRUST=1
+if [ -f "${HOME}/.config/shell/homebrew.sh" ]; then
+  . "${HOME}/.config/shell/homebrew.sh"
 fi
 
+# PATH
 if [[ "$(uname -s)" == "Darwin" ]]; then
   # macOS: Remove our paths if path_helper moved them
   path=("${(@)path:#${HOME}/.local/bin}")
@@ -33,6 +28,16 @@ fpath=(
 )
 
 export PATH FPATH
+
+# Aliases
+if [ -f "${HOME}/.config/shell/aliases.sh" ]; then
+  . "${HOME}/.config/shell/aliases.sh"
+fi
+
+# Functions
+if [ -f "${HOME}/.config/shell/functions.sh" ]; then
+  . "${HOME}/.config/shell/functions.sh"
+fi
 
 # Extras
 umask 077
