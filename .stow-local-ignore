@@ -1,0 +1,18 @@
+# Version control
+\.git
+\.gitignore
+
+# Repository metadata/documentation
+^/LICENSE
+^/README.*
+^/\.editorconfig
+^/\.gitattributes
+
+# Bootstrap tooling
+^/bootstrap
+
+# Non-dotfile resources
+^/resources
+
+# Completions
+_less

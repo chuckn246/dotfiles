@@ -1,0 +1,20 @@
+# Normalize text files
+* text=auto eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Configuration files
+*.conf text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# macOS Terminal profiles are XML-ish plist files
+*.terminal text eol=lf
+
+# Do not treat licenses/readmes as code
+LICENSE linguist-documentation
+README.md linguist-documentation
+
+# vim: ft=gitattributes ts=8 sts=2 sw=2 nosr et
