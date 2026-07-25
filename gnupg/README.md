@@ -11,4 +11,4 @@ Use [watchgnupg](https://www.gnupg.org/documentation/manuals/gnupg/watchgnupg.ht
 ----
 
 ### Links
-- https://www.gnu.org/software/stow/manual/stow.html
+- https://www.gnupg.org/documentation/index.html

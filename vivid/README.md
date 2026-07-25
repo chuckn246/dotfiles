@@ -36,4 +36,3 @@ vivid generate ${theme}
 
 Copy and paste the output to `~/.config/zsh/.zprofile` on the host computer.
 
-

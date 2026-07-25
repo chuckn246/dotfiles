@@ -11,29 +11,6 @@ Nothing too fancy, but great for my current use cases.
 
 ----
 
-### Installing
-- Create a hidden dotfiles directory:
-```bash
-mkdir -p "${HOME}/.dotfiles"
-```
-
-- Change directories:
-```bash
-cd "${HOME}/.dotfiles"
-```
-
-- Clone this repo
-```bash
-git clone git@github.com:cn246-dotfiles/git.git
-```
-
-- Stow the dotfiles:
-```bash
-stow --verbose --no-folding git
-```
-
-----
-
 ### Links
 - https://git-scm.com/docs/git-config
 - https://www.gnu.org/software/stow/manual/stow.html

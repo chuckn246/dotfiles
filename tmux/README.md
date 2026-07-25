@@ -32,7 +32,7 @@ The status bar is fairly basic which looks like this (but with color):
 
 The active window indicator is also bold.
 
----
+----
 
 ## Terminfo
 The MacOS tmux-256color terminfo lacks `bce` (back color erase).
