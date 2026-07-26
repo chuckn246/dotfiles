@@ -1,0 +1,4 @@
+audit = true
+cache = ${HOME}/.cache/npm
+ignore-scripts = true
+prefix = ${HOME}/.local/share/npm
