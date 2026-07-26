@@ -18,6 +18,7 @@ path=(
   "${HOME}/.local/bin"
   "${CARGO_HOME}/bin"
   "${GOPATH}/bin"
+  "${XDG_DATA_HOME}/npm/bin"
   ${path}
 )
 
@@ -29,15 +30,22 @@ fpath=(
 
 export PATH FPATH
 
-# Aliases
-if [ -f "${HOME}/.config/shell/aliases.sh" ]; then
-  . "${HOME}/.config/shell/aliases.sh"
-fi
+# Perl
+eval "$(perl -I"${XDG_DATA_HOME}/perl5/lib/perl5" -Mlocal::lib="${XDG_DATA_HOME}/perl5")"
 
-# Functions
-if [ -f "${HOME}/.config/shell/functions.sh" ]; then
-  . "${HOME}/.config/shell/functions.sh"
-fi
+# Load environment, etc.
+shell_files=(
+  "${HOME}/.config/shell/aliases.sh"
+  "${HOME}/.config/shell/functions.sh"
+  "${HOME}/.config/shell/fzf.sh"
+  "${HOME}/.config/shell/ls.sh"
+)
+
+for file in "${shell_files[@]}"; do
+  if [ -r "${file}" ]; then
+    . "${file}"
+  fi
+done
 
 # Extras
 umask 077

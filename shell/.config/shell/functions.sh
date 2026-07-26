@@ -107,4 +107,8 @@ gitchk() {
   done < <(find . -mindepth 1 -maxdepth 1 -type d | sort)
 }
 
+mk_yescrypt() {
+  podman run -it --rm quay.io/coreos/mkpasswd --method=yescrypt
+}
+
 # vim: ft=sh ts=2 sts=2 sw=2 sr et
