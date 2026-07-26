@@ -1,0 +1,7 @@
+.headers on
+.mode column
+
+.log stdout
+.eqp on
+
+.timer on
