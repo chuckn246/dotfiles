@@ -38,6 +38,9 @@ if [ -r "${XDG_CONFIG_HOME}/shell/less.sh" ]; then
   . "${XDG_CONFIG_HOME}/shell/less.sh"
 fi
 
+# MySQL
+export MYSQL_HISTFILE="${XDG_STATE_HOME}/mysql/history"
+
 # Network
 #if [ -f "${HOME}/.hosts" ]; then
 #  export HOSTFILE="${HOME}/.hosts"
@@ -55,6 +58,9 @@ export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 export PERL_CPAN_HOME="${XDG_CACHE_HOME}/cpan"
 export PERL_CPANM_HOME="${XDG_CACHE_HOME}/cpanm"
 
+# PSQL
+export PSQL_HISTORY="${XDG_STATE_HOME}/psql/history"
+
 # PYTHON
 export PYTHON_HISTORY="${XDG_STATE_HOME}/python/history"
 
@@ -62,6 +68,9 @@ export PYTHON_HISTORY="${XDG_STATE_HOME}/python/history"
 if command -v ranger >/dev/null 2>&1; then
   export RANGER_LOAD_DEFAULT_RC=FALSE
 fi
+
+# Redis
+export REDISCLI_HISTFILE="${XDG_STATE_HOME}/redis/history"
 
 # RIPGREP
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
@@ -80,5 +89,8 @@ fi
 
 # UV
 export UV_NO_MODIFY_PATH=1
+
+# Valkey
+export VALKEYCLI_HISTFILE="${XDG_STATE_HOME}/valkey/history"
 
 # vim: ft=sh ts=2 sts=2 sw=2 sr et
