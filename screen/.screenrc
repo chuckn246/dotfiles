@@ -1,0 +1,156 @@
+# ------------------------------------------------------------------------------
+# GNU Screen
+# ------------------------------------------------------------------------------
+
+startup_message off
+#nethack on
+
+#defflow on # will force screen to process ^S/^Q
+deflogin on
+#autodetach off
+
+# Visual bell
+vbell on
+vbell_msg "   Wuff  ----  Wuff!!  "
+
+# Scrollback
+defscrollback 10000
+
+# ------------------------------------------------------------------------------
+# TERMINAL SETTINGS
+# ------------------------------------------------------------------------------
+# The vt100 description does not mention "dl". *sigh*
+termcapinfo vt100 dl=5\E[M
+
+# Terminal
+term screen-256color
+
+# Get IP Address
+backtick 101 600 600 hostname -I
+
+# Get volume level
+#backtick 102 1 1 bash /usr/share/i3blocks/volume
+
+# Get battery status
+#backtick 103 1 1 bash /path/to/battery/script
+
+# ------------------------------------------------------------------------------
+# STATUS
+# ------------------------------------------------------------------------------
+
+hardstatus off
+hardstatus alwayslastline
+hardstatus string '%{= dG}[ %{d}%H %{b}| %{G}%101`%{d}%{g}][%= %{= dw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][ %{d}%103`%{d}%D %M-%d %{d}%{b}| %{W}%C%a %{g}]'
+# With volume
+#hardstatus string '%{= dG}[ %{d}%H %{b}| %{G}%101`%{d}%{g}][%= %{= dw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{d} Vol: %102` %{b}| %{d}%103`%{d}%D %M-%d %{d}%{b}| %{W}%C%a %{g}]'
+
+# Set the hardstatus prop on gui terms to set the titlebar/icon title
+termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007
+
+# set these terminals up to be 'optimal' instead of vt100
+termcapinfo xterm*|linux*|rxvt*|Eterm* OP
+#
+# Enable non-blocking mode to better cope with flaky ssh connections.
+defnonblock 5
+
+# Alternate screen
+altscreen on
+
+# Watch for mouse clicks. Will focus on split where mouse was clicked.
+defmousetrack on
+mousetrack on
+
+# Set bar color for splits
+rendition so wk
+
+# ------------------------------------------------------------------------------
+# STARTUP SCREENS
+# ------------------------------------------------------------------------------
+# Caption text. Highlight current window's status on split.
+caption string '%?%F%{.K.}%?%3n %t%? [%h]%?'
+
+# Open default programs
+screen -t "BASH"    0 bash -l
+screen -t "BASH"    1 bash -l
+screen -t "BASH"    2 bash -l
+screen -t "BASH"    3 bash -l
+screen -t "BASH"    4 bash -l
+
+# Shell window group
+#screen -t "DEV"     8 //group
+#select 8
+#screen -t "BASH"    10 bash
+#screen -t "BASH"    11 bash
+#screen -t "BASH"    12 bash
+#screen -t "BASH"    13 bash
+#screen -t "BASH"    14 bash
+#screen -t "BASH"    15 bash
+#select 0
+
+# Monitoring window group
+#screen -t "MON"     9 //group
+#select 9
+#screen -t "HTOP"    20 htop
+#screen -t "DMESG"   21 bash
+#screen -t "JRN"     22 bash
+#screen -t "LOGS"    23 bash
+#screen -t "LOGS"    24 bash
+#screen -t "LOGS"    25 bash
+
+# Default to window 1
+select 1
+
+# Layouts
+layout new main
+select 1
+layout autosave on
+
+layout new multi
+select 10
+split -v
+split -v
+resize -10%
+focus right
+select 11
+resize +5%
+focus right
+select 12
+split
+focus down
+select 13
+focus left
+
+#layout new vsplit
+#select 14
+#split
+#focus down
+#select 15
+#focus up
+
+layout new hsplit
+select 1
+split -v
+focus right
+resize -10%
+select 2
+focus left
+
+layout attach main
+layout select main
+
+# Cycle through windows
+# Ctrl-a [h,j,k,l,t,b]
+bind h focus left
+bind j focus next
+bind k focus prev
+bind l focus right
+
+# Cycle through layouts
+# Ctrl-j j
+bind -c layoutN j layout next
+bindkey "^J" command -c layoutN
+# Ctrl-k k
+bind -c layoutP k layout prev
+bindkey "^K" command -c layoutP
+
+# vim: ft=screen ts=2 sts=2 sw=2 nosr et
