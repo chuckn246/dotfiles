@@ -4,6 +4,9 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
+# CURL
+export CURL_HOME="${XDG_CONFIG_HOME}/curl"
+
 # EDITOR
 if command -v nvim >/dev/null 2>&1; then
     export EDITOR=nvim
@@ -14,7 +17,6 @@ else
 fi
 export VISUAL="${EDITOR}"
 export SUDO_EDITOR="${EDITOR}"
-
 
 # GO
 export GOPATH="${XDG_DATA_HOME}/go"
@@ -38,10 +40,10 @@ if [ -r "${XDG_CONFIG_HOME}/shell/less.sh" ]; then
   . "${XDG_CONFIG_HOME}/shell/less.sh"
 fi
 
-# MySQL
+# MYSQL
 export MYSQL_HISTFILE="${XDG_STATE_HOME}/mysql/history"
 
-# Network
+# NETWORK
 #if [ -f "${HOME}/.hosts" ]; then
 #  export HOSTFILE="${HOME}/.hosts"
 #fi
@@ -69,7 +71,7 @@ if command -v ranger >/dev/null 2>&1; then
   export RANGER_LOAD_DEFAULT_RC=FALSE
 fi
 
-# Redis
+# REDIS
 export REDISCLI_HISTFILE="${XDG_STATE_HOME}/redis/history"
 
 # RIPGREP
@@ -90,7 +92,7 @@ fi
 # UV
 export UV_NO_MODIFY_PATH=1
 
-# Valkey
+# VALKEY
 export VALKEYCLI_HISTFILE="${XDG_STATE_HOME}/valkey/history"
 
 # vim: ft=sh ts=2 sts=2 sw=2 sr et
