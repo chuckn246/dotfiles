@@ -14,11 +14,17 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   path=("${(@)path:#${CARGO_HOME}/bin}")
 fi
 
-path=(
+local -a user_paths=(
   "${HOME}/.local/bin"
   "${CARGO_HOME}/bin"
   "${GOPATH}/bin"
   "${XDG_DATA_HOME}/npm/bin"
+  "${HOMEBREW_PREFIX}/opt/libpq/bin"
+  "${HOMEBREW_PREFIX}/opt/mysql-client/bin"
+)
+
+path=(
+  ${user_paths}
   ${path}
 )
 
