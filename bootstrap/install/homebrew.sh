@@ -21,10 +21,21 @@ install_homebrew() {
     --show-error \
     --fail \
     --location \
-    --output "${tmpdir}/install.sh"
+    --output "${tmpdir}/install.sh" \
     "${homebrew_base_url}"
 
   /bin/bash "${tmpdir}/install.sh"
+}
+
+# Homebrew's prefix (and therefore brew's own binary path) differs by
+# architecture - /opt/homebrew on Apple Silicon, /usr/local on Intel.
+# Hardcoding one silently breaks the other.
+brew_prefix_for_arch() {
+  case "$(uname -m)" in
+    arm64) printf '/opt/homebrew' ;;
+    x86_64) printf '/usr/local' ;;
+    *) printf '[ERROR] Unsupported architecture: %s\n' "$(uname -m)" >&2; return 1 ;;
+  esac
 }
 
 OS_NAME="$(uname)"
@@ -36,7 +47,7 @@ case "${OS_NAME}" in
       exit 0
       ;;
     *)
-      printf "[ERROR] Unsupported operating system: %s\n" "${OS_NAME}" >&2
+      printf '[ERROR] Unsupported operating system: %s\n' "${OS_NAME}" >&2
       exit 1
       ;;
 esac
@@ -51,7 +62,8 @@ if ! command -v brew >/dev/null 2>&1; then
       printf '[ERROR] Trouble installing homebrew!\n' >&2
       exit 1
   else
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+    brew_prefix="$(brew_prefix_for_arch)"
+    eval "$("${brew_prefix}/bin/brew" shellenv)"
   fi
 else
   printf '[INFO] brew already installed!\n'
