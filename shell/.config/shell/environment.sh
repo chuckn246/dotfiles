@@ -91,6 +91,9 @@ fi
 
 # UV
 export UV_NO_MODIFY_PATH=1
+export UV_INSTALL_DIR="${XDG_BIN_HOME}"
+export UV_TOOL_BIN_DIR="${XDG_BIN_HOME}"
+export UV_TOOL_DIR="${XDG_DATA_HOME}/uv/tools"
 
 # VALKEY
 export VALKEYCLI_HISTFILE="${XDG_STATE_HOME}/valkey/history"
