@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+REPO_ROOT="$(
+  cd "$(dirname "${BASH_SOURCE[0]}")/../.." &&
+  pwd
+)"
+
 : "${XDG_DATA_HOME:=${HOME}/.local/share}"
 : "${XDG_BIN_HOME:=${HOME}/.local/bin}"
 
@@ -16,7 +21,7 @@ install_uv() {
   local uv_base_url="https://astral.sh/uv/install.sh"
   printf '[INFO] Installing uv\n'
   export UV_NO_MODIFY_PATH=1
-  curl \
+  curl --disable \
     --silent \
     --show-error \
     --fail \
@@ -34,19 +39,19 @@ install_uv() {
 }
 
 install_uv_tools() {
-  local uv_tools=(
-    ansible-lint
-    argcomplete
-    cfn-lint
-    isort
-    j2lint
-    pygments
-    pytest
-    ruff
-    ty
-    yamlfix
-    yamllint
-    yt-dlp
+  local tools_conf="${REPO_ROOT}/bootstrap/config/uv-tools.conf"
+  local uv_tools=()
+
+  [[ -r "${tools_conf}" ]] || {
+    printf '[ERROR] uv tools conf not found or unreadable: %s\n' "${tools_conf}" >&2
+    return 1
+  }
+
+  # Same comment/blank-line convention as home-directories.conf and
+  # stow-packages.conf - consistent parsing across all conf files rather
+  # than a bespoke format for this one.
+  mapfile -t uv_tools < <(
+    grep -vE '^\s*#|^\s*$' "${tools_conf}"
   )
 
   for tool in "${uv_tools[@]}"; do
@@ -94,7 +99,7 @@ cat <<EOF
 
        export PATH="${XDG_BIN_HOME}:\${PATH}"
 
-Then open a NEW terminal window and verify with: uv --version && ansible-lint --version
+Then open a NEW terminal window and verify with: uv --version && ykman --version
 
 EOF
 
