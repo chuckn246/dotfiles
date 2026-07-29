@@ -29,14 +29,20 @@ done < "${REPO_ROOT}/bootstrap/config/home-directories.conf"
 printf '[INFO] Running Homebrew configuration\n'
 "${REPO_ROOT}/bootstrap/install/homebrew.sh"
 
-printf '[INFO] Running UV configuration\n'
-"${REPO_ROOT}/bootstrap/install/uv.sh"
-
 printf '[INFO] Running Go configuration\n'
 "${REPO_ROOT}/bootstrap/install/go.sh"
 
+printf '[INFO] Running Node configuration\n'
+"${REPO_ROOT}/bootstrap/install/node.sh"
+
+printf '[INFO] Running Perl configuration\n'
+"${REPO_ROOT}/bootstrap/install/perl.sh"
+
 printf '[INFO] Running Rust configuration\n'
 "${REPO_ROOT}/bootstrap/install/rust.sh"
+
+printf '[INFO] Running UV configuration\n'
+"${REPO_ROOT}/bootstrap/install/uv.sh"
 
 # printf '[INFO] Running Podman configuration\n'
 # "${REPO_ROOT}/bootstrap/install/podman.sh"
