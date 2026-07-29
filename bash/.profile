@@ -45,6 +45,7 @@ fi
 
 # Load environment, etc.
 shell_files=(
+  "${HOME}/.config/shell/environment.sh"
   "${HOME}/.config/bash/prompt.sh"
   "${HOME}/.config/shell/aliases.sh"
   "${HOME}/.config/shell/functions.sh"
@@ -58,5 +59,9 @@ for file in "${shell_files[@]}"; do
     . "${file}"
   fi
 done
+
+if ! command -v brew >/dev/null 2>&1; then
+  path_append "${FNM_DIR}"
+fi
 
 # vim: ft=sh ts=2 sts=2 sw=2 sr et
