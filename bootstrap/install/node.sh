@@ -29,9 +29,14 @@ if ! command -v fnm >/dev/null 2>&1; then
     brew install fnm
   else
     printf '%s\n' "[INFO] No Homebrew - installing fnm via official installer into ${FNM_DIR}..."
-    curl -fsSL https://fnm.vercel.app/install | bash -s -- \
-      --install-dir "${FNM_DIR}" \
-      --skip-shell
+    curl --disable \
+      --fail \
+      --silent \
+      --show-error \
+      --location https://fnm.vercel.app/install \
+      | bash -s -- \
+        --install-dir "${FNM_DIR}" \
+        --skip-shell
     export PATH="${FNM_DIR}:${PATH}"
     printf '%s\n' "[WARN] Add ${FNM_DIR} to PATH in your shell config - not done automatically."
   fi

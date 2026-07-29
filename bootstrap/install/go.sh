@@ -57,8 +57,8 @@ install_go() {
         ;;
   esac
 
-  go_version=$(curl --silent "${base_go_url}/VERSION?m=text" | head -n1)
-  go_data=$(curl --silent "${base_go_download_url}/?mode=json" \
+  go_version=$(curl --disable --silent "${base_go_url}/VERSION?m=text" | head -n1)
+  go_data=$(curl --disable --silent "${base_go_download_url}/?mode=json" \
     | jq --raw-output \
         --arg GO_OS "${os_name,,}" \
         --arg GO_ARCH "${go_arch}" \
@@ -87,7 +87,8 @@ install_go() {
   # the download URL itself (.../dl//tmp/tmp.XXXX/go1.x...), which likely
   # 404'd silently since this only runs when Go isn't already installed.
   go_file_path="${tmpdir}/${go_file_name}"
-  curl --silent \
+  curl --disable \
+    --silent \
     --show-error \
     --location \
     --output "${go_file_path}" \

@@ -24,14 +24,14 @@ install_podman_macos() {
   tmpdir="$(mktemp -d)"
   trap 'rm -rf "'"${tmpdir}"'"' EXIT
 
-  curl \
+  curl --disable \
     --silent \
     --show-error \
     --location \
     --output "${tmpdir}/shasums" \
     "${podman_base_download_url}/shasums"
 
-  curl \
+  curl --disable \
     --silent \
     --show-error \
     --location \
