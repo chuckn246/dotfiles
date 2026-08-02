@@ -42,6 +42,7 @@ fi
 
 # MYSQL
 export MYSQL_HISTFILE="${XDG_STATE_HOME}/mysql/history"
+export MYSQL_HOME="${XDG_CONFIG_HOME}/mysql"
 
 # NETWORK
 #if [ -f "${HOME}/.hosts" ]; then
@@ -62,6 +63,7 @@ export PERL_CPANM_HOME="${XDG_CACHE_HOME}/cpanm"
 
 # PSQL
 export PSQL_HISTORY="${XDG_STATE_HOME}/psql/history"
+export PSQLRC="${XDG_CONFIG_HOME}/psql/psqlrc"
 
 # PYTHON
 export PYTHON_HISTORY="${XDG_STATE_HOME}/python/history"
