@@ -1,0 +1,25 @@
+\set QUIET 1
+
+\x auto
+\timing on
+\pset linestyle unicode
+\pset border 2
+\pset null '(null)'
+
+-- Rolls back only the failing statement inside a transaction instead of
+-- torching the whole block on the first typo — valuable specifically because
+-- you're in here infrequently and more likely to fat-finger something
+\set ON_ERROR_ROLLBACK interactive
+
+-- Original prompt only showed the db name — no host, no user. Fine if you
+-- live in one DB all day, risky when you're hopping servers occasionally.
+-- %M = hostname (or "[local]" over a socket), red+bold so wrong-host jumps out.
+\set PROMPT1 '%[%033[1;31m%]%M%[%033[0m%] %n@%[%033[1m%]%/%[%033[0m%] %# '
+\set PROMPT2 '%[%033[1;31m%]%M%[%033[0m%] ... > '
+
+\set VERBOSITY verbose
+\set HISTFILE ~/.psql_history- :DBNAME
+\set HISTCONTROL ignoredups
+\set COMP_KEYWORD_CASE upper
+
+\unset QUIET
