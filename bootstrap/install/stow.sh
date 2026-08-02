@@ -43,7 +43,7 @@ backup_real_file_conflicts() {
   done < <(
     stow \
       --simulate \
-      --verbose=1 \
+      --verbose=0 \
       --dir="${REPO_ROOT}" \
       --target="${HOME}" \
       --restow \
@@ -59,13 +59,12 @@ for dotfile in "${stow_dotfiles[@]}"; do
     backup_real_file_conflicts "${dotfile}"
 
     stow \
-      --verbose=1 \
+      --verbose=0 \
       --dir="${REPO_ROOT}" \
       --target="${HOME}" \
       --restow \
       --no-folding \
       "${dotfile}"
-    printf '\n'
   fi
 done
 
