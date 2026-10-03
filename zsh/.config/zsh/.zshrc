@@ -12,6 +12,11 @@ if [ -r "${ZDOTDIR}/lib/environment.zsh" ]; then
   source "${ZDOTDIR}/lib/environment.zsh"
 fi
 
+# Source custom local environment setup
+if [ -r "${HOME}/.local/etc/shell/local.env" ]; then
+  source "${HOME}/.local/etc/shell/local.env"
+fi
+
 # Plugins
 plugins=(direnv gpg-agent vi-mode)
 
