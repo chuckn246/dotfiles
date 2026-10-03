@@ -57,6 +57,22 @@ if ! shopt -oq posix; then
     complete -C "$(command -v aws_completer)" aws
   fi
 
+  if command -v bao >/dev/null; then
+    complete -C "$(command -v bao)" bao
+  fi
+
+  # Terraform completions
+  if command -v terraform >/dev/null 2>&1; then
+    complete -o nospace -C "$(command -v terraform)" terraform
+    complete -o nospace -C "$(command -v terraform)" tf
+  fi
+
+  # Terragrunt completions
+  if  command -v terragrunt >/dev/null 2>&1; then
+    complete -o nospace -C "$(command -v terragrunt)" terragrunt
+    complete -o nospace -C "$(command -v terragrunt)" tg
+  fi
+
   # fzf key bindings
   if command -v fzf >/dev/null 2>&1; then
     FZF_DIR="${HOMEBREW_PREFIX}/opt/fzf/shell"
