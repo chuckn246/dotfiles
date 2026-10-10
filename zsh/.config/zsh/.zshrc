@@ -1,101 +1,181 @@
 # Performance profiling (uncomment to enable)
 # zmodload zsh/zprof
 
+
+# ------------------------------------------------------------
+# Environment
+# ------------------------------------------------------------
+
+# Zsh completion cache
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME}/zsh"
 export ZCOMPDUMP="${ZSH_CACHE_DIR}/completions/zcompdump"
 
-# Load all stock functions (from $fpath files) called below.
-autoload -U compaudit zmv zrecompile
+# Load standard Zsh functions
+autoload -Uz compaudit zmv zrecompile
 
-# Source environment setup (FZF, LS_COLORS, etc.)
-if [ -r "${ZDOTDIR}/lib/environment.zsh" ]; then
+# Initialize environment settings before loading plugins
+if [[ -r "${ZDOTDIR}/lib/environment.zsh" ]]; then
   source "${ZDOTDIR}/lib/environment.zsh"
 fi
 
-# Source custom local environment setup
-if [ -r "${HOME}/.local/etc/shell/local.env" ]; then
+# Load machine-specific environment settings
+if [[ -r "${HOME}/.local/etc/shell/local.env" ]]; then
   source "${HOME}/.local/etc/shell/local.env"
 fi
 
+
+# ------------------------------------------------------------
+# Shell Configuration
+# ------------------------------------------------------------
+
+# Load interactive aliases, functions, and integrations
+shell_files=(
+  "${HOME}/.config/shell/aliases.sh"
+  "${HOME}/.config/shell/functions.sh"
+  "${HOME}/.config/shell/fzf.sh"
+  "${HOME}/.config/shell/ls.sh"
+)
+
+for file in "${shell_files[@]}"; do
+  if [[ -r "${file}" ]]; then
+    source "${file}"
+  fi
+done
+
+unset shell_files file
+
+
+# ------------------------------------------------------------
 # Plugins
+# ------------------------------------------------------------
+
+# Load installed Zsh plugins
 plugins=(direnv gpg-agent vi-mode)
 
-is_plugin() {
-  local base_dir=$1 name=$2
-  builtin test -f $base_dir/plugins/$name/$name.plugin.zsh \
-    || builtin test -f $base_dir/plugins/$name/_$name
-}
+for plugin in "${plugins[@]}"; do
+  plugin_dir="${ZDOTDIR}/plugins/${plugin}"
+  plugin_file="${plugin_dir}/${plugin}.plugin.zsh"
 
-for plugin (${plugins}); do
-  if is_plugin "${ZDOTDIR}" "${plugin}"; then
-    (( ${fpath[(Ie)"${ZDOTDIR}/plugins/${plugin}"]} )) \
-      || fpath=("${ZDOTDIR}/plugins/${plugin}" ${fpath})
-    source "${ZDOTDIR}/plugins/${plugin}/${plugin}.plugin.zsh"
+  if [[ -r "${plugin_file}" ]]; then
+    # Add the plugin's functions directory only once
+    (( ${fpath[(Ie)"${plugin_dir}"]} )) \
+      || fpath=("${plugin_dir}" "${fpath[@]}")
+
+    source "${plugin_file}"
   else
     printf '%s\n' "Plugin '${plugin}' not found"
   fi
 done
 
-unset plugin is_plugin
+unset plugins plugin plugin_dir plugin_file
 
-# Config files
-for config_file ("${ZDOTDIR}"/lib/*.zsh(N)); do
+
+# ------------------------------------------------------------
+# Additional Configuration
+# ------------------------------------------------------------
+
+# Load remaining modules, excluding those loaded explicitly
+for config_file in "${ZDOTDIR}"/lib/*.zsh(N); do
+  case "${config_file:t}" in
+    environment.zsh|ssh.zsh)
+      continue
+      ;;
+  esac
+
   source "${config_file}"
 done
 
-# Functions - autoload all custom functions from the functions directory
-if [ -d "${ZDOTDIR}/functions" ]; then
-  for file in ${ZDOTDIR}/functions/*; do
-    [[ -f "${file}" ]] || continue
+unset config_file
+
+
+# ------------------------------------------------------------
+# Functions
+# ------------------------------------------------------------
+
+# Register custom functions for autoloading
+if [[ -d "${ZDOTDIR}/functions" ]]; then
+  for file in "${ZDOTDIR}"/functions/*(N.); do
     autoload -Uz "${file:t}"
   done
 fi
 
-# Input/Output
+unset file
+
+
+# ------------------------------------------------------------
+# Shell Options
+# ------------------------------------------------------------
+
+# Allow comments in interactive commands
 setopt interactive_comments
 
-# Job Control
+# Display detailed job information
 setopt long_list_jobs
 
-# Shell State
-#setopt interactive
-#setopt login
-#setopt shinstdin
-
-# ZLE
+# Handle combining Unicode characters
 setopt combining_chars
 
-# Safe paste - prevents execution of pasted commands
+
+# ------------------------------------------------------------
+# ZLE
+# ------------------------------------------------------------
+
+# Prevent pasted commands from executing automatically
 autoload -Uz bracketed-paste-magic
 zle -N bracketed-paste bracketed-paste-magic
 
+
+# ------------------------------------------------------------
 # Prompt
+# ------------------------------------------------------------
+
+# Enable prompt substitutions
 setopt prompt_subst
 
-if [ -d "${ZDOTDIR}"/prompts ]; then
-  fpath=("${ZDOTDIR}"/prompts ${fpath})
+# Load the custom prompt
+if [[ -d "${ZDOTDIR}/prompts" ]]; then
+  fpath=("${ZDOTDIR}/prompts" "${fpath[@]}")
+
   autoload -Uz prompt_chaz_setup
   prompt_chaz_setup
 fi
 
-# Set venv prompt when using vim terminal
-if [ -v VIMRUNTIME ] && [ -v VIRTUAL_ENV ]; then
+# Display the virtual environment in Vim/Neovim terminals
+if [[ -v VIMRUNTIME && -v VIRTUAL_ENV ]]; then
   PS1="${VIRTUAL_ENV_PROMPT}${PS1:-}"
   export PS1
 fi
 
-# Node
+
+# ------------------------------------------------------------
+# Node.js
+# ------------------------------------------------------------
+
+# Initialize Fast Node Manager
 if command -v fnm >/dev/null 2>&1; then
   eval "$(fnm env --use-on-cd)"
 fi
 
+
+# ------------------------------------------------------------
 # Yamlfix
-if [[ -f "${HOME}/.config/yamlfix/yamlfix" ]]; then
+# ------------------------------------------------------------
+
+# Load yamlfix shell configuration
+if [[ -r "${HOME}/.config/yamlfix/yamlfix" ]]; then
   source "${HOME}/.config/yamlfix/yamlfix"
 fi
 
-# SSH key loading
-source "${ZDOTDIR}/lib/ssh.zsh"
+
+# ------------------------------------------------------------
+# SSH
+# ------------------------------------------------------------
+
+# Initialize SSH key management
+if [[ -r "${ZDOTDIR}/lib/ssh.zsh" ]]; then
+  source "${ZDOTDIR}/lib/ssh.zsh"
+fi
+
 
 # Performance profiling output (uncomment to enable)
 # zprof
