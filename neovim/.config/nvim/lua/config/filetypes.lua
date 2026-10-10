@@ -2,39 +2,71 @@
 -- Filetype Detection
 -- ------------------------------------------------------------
 
--- Register custom filetypes based on filenames and file contents
+-- Register custom filetypes based on filenames, paths, and contents
 vim.filetype.add({
-  pattern = {
-    -- CloudFormation templates identified by filename
-    [".*%.cfn%.yaml"] = "yaml.cloudformation",
-    [".*%.cfn%.yml"] = "yaml.cloudformation",
+  -- ------------------------------------------------------------
+  -- File Extensions
+  -- ------------------------------------------------------------
 
-    -- CloudFormation templates identified by their first line
+  extension = {
+    -- Jinja and Nunjucks templates
+    j2 = "jinja",
+    jinja = "jinja",
+    jinja2 = "jinja",
+    njk = "jinja",
+    nunjucks = "jinja",
+    nunjs = "jinja",
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Filename Patterns
+  -- ------------------------------------------------------------
+
+  pattern = {
+    -- Ansible inventory variables
+    [".*/group_vars/.*%.ya?ml"] = "yaml.ansible",
+    [".*/host_vars/.*%.ya?ml"] = "yaml.ansible",
+
+    -- Ansible playbooks and tasks
+    [".*/playbook[^/]*%.ya?ml"] = "yaml.ansible",
+    [".*/playbooks/.*%.ya?ml"] = "yaml.ansible",
+    [".*/tasks/.*%.ya?ml"] = "yaml.ansible",
+
+    -- Ansible roles
+    [".*/roles/.*/defaults/.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/handlers/.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/meta/.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/tasks/.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/vars/.*%.ya?ml"] = "yaml.ansible",
+
+    -- Ansible Molecule configuration
+    [".*/molecule/.*%.ya?ml"] = "yaml.ansible",
+
+    -- CloudFormation templates identified by filename
+    [".*%.cfn%.ya?ml"] = {
+      "yaml.cloudformation",
+      { priority = 20 },
+    },
+
+    -- CloudFormation templates identified within the first five lines
     [".*%.ya?ml"] = {
       function(_, bufnr)
-        local first_line = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
+        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+          return
+        end
 
-        if first_line:match("^AWSTemplateFormatVersion:") then
-          return "yaml.cloudformation"
+        -- Allow YAML document markers, comments, and blank lines
+        local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 5, false)
+
+        for _, line in ipairs(lines) do
+          if line:match("^%s*AWSTemplateFormatVersion%s*:") then
+            return "yaml.cloudformation"
+          end
         end
       end,
       { priority = 10 },
     },
-
-    -- Jinja and Nunjucks templates
-    [".*%.jinja2"] = "jinja",
-    [".*%.j2"] = "jinja",
-    [".*%.jinja"] = "jinja",
-    [".*%.nunjucks"] = "jinja",
-    [".*%.nunjs"] = "jinja",
-    [".*%.njk"] = "jinja",
-
-    -- Mutt temporary message files
-    [".*/?mutt%-.*"] = "mail",
-
-    -- Calcurse notes and temporary files
-    [".*/calcurse.*"] = "markdown",
-    [".*/%.calcurse/notes.*"] = "markdown",
   },
 })
 
