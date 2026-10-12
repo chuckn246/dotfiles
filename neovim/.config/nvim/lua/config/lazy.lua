@@ -35,16 +35,21 @@ vim.opt.rtp:prepend(lazypath)
 -- Configuration
 -- ------------------------------------------------------------
 
-require("lazy").setup({
-  -- Load plugin specifications from lua/plugins/
-  spec = {
-    { import = "plugins" },
-  },
+  require("lazy").setup({
+    -- Load plugin specifications from lua/plugins/
+    spec = {
+      { import = "plugins" },
+    },
 
-  -- Colorscheme used during initial plugin installation
-  install = {
-    colorscheme = { "habamax" },
-  },
+    -- Disable LuaRocks integration
+    rocks = {
+      enabled = false,
+    },
+
+    -- Colorscheme used during initial plugin installation
+    install = {
+      colorscheme = { "habamax" },
+    },
 
   -- Check for plugin updates without installing them
   checker = {
