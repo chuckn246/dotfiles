@@ -82,7 +82,7 @@ opt.foldcolumn = "2"                        -- Reserve two columns for fold indi
 opt.cmdheight = 2                           -- Reserve two lines for the command area
 opt.showcmd = true                          -- Display partially entered commands
 opt.wildmenu = true                         -- Enable enhanced command-line completion
-opt.wildmode = { "longest:full", "full" }     -- Complete longest match, then cycle through matches
+opt.wildmode = { "longest:full", "full" }   -- Complete longest match, then cycle through matches
 
 -- Cursor and line numbers
 opt.colorcolumn = "80"                      -- Highlight the 80th column
