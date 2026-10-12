@@ -170,6 +170,11 @@ end, {
   desc = "Terminal vertical split",
 })
 
+-- Enter Terminal-Normal mode to navigate or copy terminal output
+keymap("t", "<C-w>n", "<C-\\><C-n>", {
+  desc = "Terminal-Normal mode",
+})
+
 
 -- ------------------------------------------------------------
 -- Terminal Window Navigation
