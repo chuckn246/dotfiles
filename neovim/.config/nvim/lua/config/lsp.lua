@@ -170,6 +170,16 @@ vim.diagnostic.config({
   signs = true,            -- Show diagnostic indicators in the sign column
   underline = true,        -- Underline problematic text
   severity_sort = true,    -- Prioritize errors over warnings and hints
+
+  -- Style diagnostic floating windows
+  float = {
+    border = "single",
+    source = true,
+    header = "",
+    -- prefix = "",
+    max_width = 80,
+    focusable = false,
+  },
 })
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et
