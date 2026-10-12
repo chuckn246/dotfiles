@@ -67,6 +67,19 @@ vim.treesitter.language.register("yaml", "yaml.cloudformation")
 -- Syntax Highlighting
 -- ------------------------------------------------------------
 
+-- Derive supported filetypes from the installed parsers
+-- Exclude parsers used only for embedded language highlighting
+local filetypes = vim.tbl_filter(function(parser)
+  return parser ~= "markdown_inline"
+end, parsers)
+
+-- Include filetypes that use another language's parser
+vim.list_extend(filetypes, {
+  "sh",
+  "terraform-vars",
+  "yaml.cloudformation",
+})
+
 local group = vim.api.nvim_create_augroup("TreesitterHighlight", {
   clear = true,
 })
@@ -74,43 +87,7 @@ local group = vim.api.nvim_create_augroup("TreesitterHighlight", {
 -- Enable syntax highlighting for supported filetypes
 vim.api.nvim_create_autocmd("FileType", {
   group = group,
-  pattern = {
-    "bash",
-    "css",
-    "diff",
-    "dockerfile",
-    "gitcommit",
-    "gitignore",
-    "go",
-    "gomod",
-    "gosum",
-    "hcl",
-    "html",
-    "ini",
-    "javascript",
-    "jinja",
-    "json",
-    "lua",
-    "make",
-    "markdown",
-    "perl",
-    "php",
-    "python",
-    "rust",
-    "scss",
-    "sh",
-    "sql",
-    "terraform",
-    "terraform-vars",
-    "toml",
-    "typescript",
-    "vim",
-    "vimdoc",
-    "xml",
-    "yaml",
-    "yaml.cloudformation",
-    "zsh",
-  },
+  pattern = filetypes,
   callback = function(args)
     -- Preserve traditional Ansible syntax highlighting
     if vim.bo[args.buf].filetype == "yaml.ansible" then
