@@ -30,15 +30,9 @@ fi
 export LESS
 export PAGER=less
 
-if command -v lessfile >/dev/null 2>&1; then
-  eval "$(lessfile)"
-else
-  export LESSOPEN="| ~/.lessfilter %s"
-fi
-
 # LS
-if [ -r "${XDG_CONFIG_HOME}/shell/less.sh" ]; then
-  . "${XDG_CONFIG_HOME}/shell/less.sh"
+if [ -r "${XDG_CONFIG_HOME}/shell/lsh.sh" ]; then
+  . "${XDG_CONFIG_HOME}/shell/ls.sh"
 fi
 
 # MYSQL
