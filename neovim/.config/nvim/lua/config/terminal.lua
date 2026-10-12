@@ -1,11 +1,4 @@
 -- ------------------------------------------------------------
--- Terminal
--- ------------------------------------------------------------
-
-local keymap = vim.keymap.set
-
-
--- ------------------------------------------------------------
 -- Terminal Management
 -- ------------------------------------------------------------
 
@@ -66,42 +59,11 @@ vim.api.nvim_create_autocmd("TermClose", {
 
 
 -- ------------------------------------------------------------
--- Keymaps
+-- Module
 -- ------------------------------------------------------------
 
--- Open a terminal in a horizontal split
-keymap("n", "<leader>t", function()
-  open_terminal("split")
-end, {
-  desc = "Terminal horizontal split",
-})
-
--- Open a terminal in a vertical split
-keymap("n", "<leader>T", function()
-  open_terminal("vsplit")
-end, {
-  desc = "Terminal vertical split",
-})
-
-
--- ------------------------------------------------------------
--- Terminal Window Navigation
--- ------------------------------------------------------------
-
--- Preserve Vim-style window navigation while in Terminal mode
-local directions = {
-  h = "h",
-  j = "j",
-  k = "k",
-  l = "l",
-  w = "w",
-  p = "p",
+return {
+  open = open_terminal,
 }
-
-for key, motion in pairs(directions) do
-  keymap("t", "<C-w>" .. key, "<C-\\><C-n><C-w>" .. motion, {
-    desc = "Navigate terminal windows",
-  })
-end
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et

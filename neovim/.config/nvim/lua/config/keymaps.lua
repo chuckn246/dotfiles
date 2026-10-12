@@ -58,6 +58,32 @@ keymap({ "n", "x" }, "<leader>p", '"+p', {
 
 
 -- ------------------------------------------------------------
+-- Completion
+-- ------------------------------------------------------------
+
+-- Manually request completion suggestions from attached language servers
+keymap("i", "<C-Space>", "<C-x><C-o>", {
+  desc = "Trigger LSP completion",
+})
+
+-- Select the next completion item
+keymap("i", "<C-j>", function()
+  return vim.fn.pumvisible() == 1 and "<C-n>" or "<C-j>"
+end, {
+  expr = true,
+  desc = "Next completion",
+})
+
+-- Select the previous completion item, or enter a digraph
+keymap("i", "<C-k>", function()
+  return vim.fn.pumvisible() == 1 and "<C-p>" or "<C-k>"
+end, {
+  expr = true,
+  desc = "Previous completion",
+})
+
+
+-- ------------------------------------------------------------
 -- File Navigation
 -- ------------------------------------------------------------
 
@@ -103,12 +129,78 @@ keymap("n", "<leader>gb", "<cmd>Git blame<CR>", {
 
 
 -- ------------------------------------------------------------
+-- Modeline
+-- ------------------------------------------------------------
+
+local modeline = require("config.modeline")
+
+-- Insert a modeline for the current buffer
+keymap("n", "<leader>ml", modeline.insert, {
+  desc = "Insert modeline",
+})
+
+
+-- ------------------------------------------------------------
 -- Searching
 -- ------------------------------------------------------------
 
 -- Clear search highlighting and redraw the screen
 keymap("n", "<C-l>", "<cmd>nohlsearch<CR><C-l>", {
   desc = "Clear search highlighting",
+})
+
+
+-- ------------------------------------------------------------
+-- Terminal
+-- ------------------------------------------------------------
+
+local terminal = require("config.terminal")
+
+-- Open a terminal in a horizontal split
+keymap("n", "<leader>t", function()
+  terminal.open("split")
+end, {
+  desc = "Terminal horizontal split",
+})
+
+-- Open a terminal in a vertical split
+keymap("n", "<leader>T", function()
+  terminal.open("vsplit")
+end, {
+  desc = "Terminal vertical split",
+})
+
+
+-- ------------------------------------------------------------
+-- Terminal Window Navigation
+-- ------------------------------------------------------------
+
+-- Preserve Vim-style window navigation while in Terminal mode
+local directions = {
+  h = "h",
+  j = "j",
+  k = "k",
+  l = "l",
+  w = "w",
+  p = "p",
+}
+
+for key, motion in pairs(directions) do
+  keymap("t", "<C-w>" .. key, "<C-\\><C-n><C-w>" .. motion, {
+    desc = "Navigate terminal windows",
+  })
+end
+
+
+-- ------------------------------------------------------------
+-- Whitespace
+-- ------------------------------------------------------------
+
+local whitespace = require("config.whitespace")
+
+-- Manually remove trailing whitespace
+keymap("n", "<leader>w", whitespace.trim, {
+  desc = "Trim trailing whitespace",
 })
 
 

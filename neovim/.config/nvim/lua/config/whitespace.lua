@@ -122,12 +122,11 @@ end
 
 
 -- ------------------------------------------------------------
--- Keymaps
+-- Module
 -- ------------------------------------------------------------
 
--- Manually remove trailing whitespace with leader + w
-vim.keymap.set("n", "<leader>w", trim_whitespace, {
-  desc = "Trim trailing whitespace",
-})
+return {
+  trim = trim_whitespace,
+}
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et

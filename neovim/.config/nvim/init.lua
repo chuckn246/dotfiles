@@ -45,7 +45,6 @@ require("config.lazy")
 -- ------------------------------------------------------------
 
 -- Configure language servers, external linters, and syntax highlighting
-require("config.completion")
 require("config.lsp")
 require("config.lint")
 require("config.treesitter")
@@ -56,10 +55,10 @@ require("config.treesitter")
 -- ------------------------------------------------------------
 
 -- Load keyboard mappings and editor utilities
-require("config.keymaps")
 require("config.terminal")
 require("config.whitespace")
 require("config.conflicts")
 require("config.modeline")
+require("config.keymaps")
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et

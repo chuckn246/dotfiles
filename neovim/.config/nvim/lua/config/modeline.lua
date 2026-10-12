@@ -5,7 +5,7 @@
 
 local function append_modeline()
   local modeline = string.format(
-    "vim: ft=%s ts=%d sts=%d sw=%d %set",
+    " vim: ft=%s ts=%d sts=%d sw=%d %set",
     vim.bo.filetype,
     vim.bo.tabstop,
     vim.bo.softtabstop,
@@ -29,9 +29,13 @@ local function append_modeline()
   })
 end
 
-vim.keymap.set("n", "<leader>ml", append_modeline, {
-  silent = true,
-  desc = "Append modeline",
-})
+
+-- ------------------------------------------------------------
+-- Module
+-- ------------------------------------------------------------
+
+return {
+  insert = append_modeline,
+}
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et
