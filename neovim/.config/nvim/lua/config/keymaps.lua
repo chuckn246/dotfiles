@@ -51,11 +51,6 @@ keymap({ "n", "x" }, "<leader>y", '"+y', {
   desc = "Yank to clipboard",
 })
 
--- Paste text from the system clipboard
-keymap({ "n", "x" }, "<leader>p", '"+p', {
-  desc = "Paste from clipboard",
-})
-
 
 -- ------------------------------------------------------------
 -- Completion
