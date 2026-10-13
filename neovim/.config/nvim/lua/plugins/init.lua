@@ -195,6 +195,41 @@ return {
     "mfussenegger/nvim-lint",
     lazy = false,
   },
+
+
+  -- ------------------------------------------------------------
+  -- Helpers
+  -- ------------------------------------------------------------
+
+  -- nvim-lint: https://github.com/folke/which-key.nvim
+  -- Helps remember Neovim keymaps
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      show_help = false,
+      icons = {
+        mappings = false,
+      },
+      replace = {
+        key = {
+          { "<Space>", "leader" },
+        },
+      },
+      {
+        keys = {
+          Space = "leader",
+          Esc = "Esc",
+          BS = "BS",
+          "<leader>?",
+          function()
+            require("which-key").show({ global = false })
+          end,
+          desc = "Buffer Local Keymaps (which-key)",
+        },
+      },
+    },
+  },
 }
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et
