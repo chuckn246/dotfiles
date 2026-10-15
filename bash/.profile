@@ -49,8 +49,6 @@ shell_files=(
   "${HOME}/.config/bash/prompt.sh"
   "${HOME}/.config/shell/aliases.sh"
   "${HOME}/.config/shell/functions.sh"
-  "${HOME}/.config/shell/fzf.sh"
-  "${HOME}/.config/shell/ls.sh"
   "${HOME}/.bashrc"
 )
 

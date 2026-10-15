@@ -19,6 +19,11 @@ fi
 export VISUAL="${EDITOR}"
 export SUDO_EDITOR="${EDITOR}"
 
+# FZF
+if [ -r "${XDG_CONFIG_HOME}/shell/fzf.sh" ]; then
+  . "${XDG_CONFIG_HOME}/shell/fzf.sh"
+fi
+
 # GO
 export GOPATH="${XDG_DATA_HOME}/go"
 
@@ -31,7 +36,7 @@ export LESS
 export PAGER=less
 
 # LS
-if [ -r "${XDG_CONFIG_HOME}/shell/lsh.sh" ]; then
+if [ -r "${XDG_CONFIG_HOME}/shell/ls.sh" ]; then
   . "${XDG_CONFIG_HOME}/shell/ls.sh"
 fi
 

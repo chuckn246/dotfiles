@@ -30,10 +30,8 @@ fi
 
 # Load interactive aliases, functions, and integrations
 shell_files=(
-  "${HOME}/.config/shell/aliases.sh"
-  "${HOME}/.config/shell/functions.sh"
-  "${HOME}/.config/shell/fzf.sh"
-  "${HOME}/.config/shell/ls.sh"
+  "${XDG_CONFIG_HOME}/shell/aliases.sh"
+  "${XDG_CONFIG_HOME}/shell/functions.sh"
 )
 
 for file in "${shell_files[@]}"; do
@@ -162,8 +160,8 @@ fi
 # ------------------------------------------------------------
 
 # Load yamlfix shell configuration
-if [[ -r "${HOME}/.config/yamlfix/yamlfix" ]]; then
-  source "${HOME}/.config/yamlfix/yamlfix"
+if [[ -r "${XDG_CONFIG_HOME}/yamlfix/yamlfix" ]]; then
+  source "${XDG_CONFIG_HOME}/yamlfix/yamlfix"
 fi
 
 

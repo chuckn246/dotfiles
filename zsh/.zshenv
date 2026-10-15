@@ -8,7 +8,7 @@ if [ -r "${HOME}/.config/shell/environment.sh" ]; then
 fi
 
 # ZSH
-export ZDOTDIR="$HOME/.config/zsh"
+export ZDOTDIR="${HOME}/.config/zsh"
 export SHELL_SESSIONS_DISABLE=1
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME}/zsh"
 export ZCOMPDUMP="${ZSH_CACHE_DIR}/completions/zcompdump"
