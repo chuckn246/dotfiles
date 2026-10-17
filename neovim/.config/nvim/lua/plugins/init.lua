@@ -37,6 +37,26 @@ return {
     lazy = false,
 
     opts = {
+      -- Configure file explorer keybindings
+      on_attach = function(bufnr)
+        local api = require("nvim-tree.api")
+
+        -- Preserve default nvim-tree mappings
+        api.map.on_attach.default(bufnr)
+
+        -- Restore native Vim navigation (top, middle, bottom)
+        for _, key in ipairs({ "H", "M", "L" }) do
+          vim.keymap.del("n", key, { buffer = bufnr })
+        end
+
+        -- Toggle hidden files with zh instead of H
+        vim.keymap.set("n", "zh", api.filter.dotfiles.toggle, {
+          buffer = bufnr,
+          desc = "Toggle dotfiles",
+          silent = true,
+        })
+      end,
+
       -- Sidebar position and dimensions
       view = {
         side = "left",
@@ -92,149 +112,14 @@ return {
 
 
   -- ------------------------------------------------------------
-  -- FZF
+  -- Formatting
   -- ------------------------------------------------------------
-
-  -- Use the core Vim integration installed by Homebrew
-  {
-    dir = "/opt/homebrew/opt/fzf",
-    name = "fzf",
-    lazy = false,
-  },
-
-  -- fzf.vim: https://github.com/junegunn/fzf.vim
-  -- Provide fuzzy file, buffer, and text-search commands
-  {
-    "junegunn/fzf.vim",
-    dependencies = { "fzf" },
-    lazy = false,
-  },
-
-
-  -- ------------------------------------------------------------
-  -- Git Integration
-  -- ------------------------------------------------------------
-
-  -- vim-fugitive: https://github.com/tpope/vim-fugitive
-  -- Provide Git status, blame, staging, and other Git commands
-  {
-    "tpope/vim-fugitive",
-  },
-
-
-  -- ------------------------------------------------------------
-  -- Surround
-  -- ------------------------------------------------------------
-
-  -- vim-surround: https://github.com/tpope/vim-surround
-  -- Add, change, and remove surrounding characters
-  -- Enable dot-repeat support for supported surround operations
-  {
-    "tpope/vim-surround",
-    dependencies = {
-      "tpope/vim-repeat",
-    },
-  },
-
-
-  -- ------------------------------------------------------------
-  -- Marks
-  -- ------------------------------------------------------------
-
-  -- vim-signature: https://github.com/kshenoy/vim-signature
-  -- Display and navigate Vim marks in the sign column
-  {
-    "kshenoy/vim-signature",
-    lazy = false,
-  },
-
-
-  -- ------------------------------------------------------------
-  -- Language Server Protocol
-  -- ------------------------------------------------------------
-
-  -- nvim-lspconfig: https://github.com/neovim/nvim-lspconfig
-  -- Provide standard language server configurations for native LSP
-  {
-    "neovim/nvim-lspconfig",
-    lazy = false,
-  },
-
-
-  -- ------------------------------------------------------------
-  -- Syntax Highlighting
-  -- ------------------------------------------------------------
-
-  -- nvim-treesitter: https://github.com/nvim-treesitter/nvim-treesitter
-  -- Manage Treesitter parsers for supported languages
-  {
-    "nvim-treesitter/nvim-treesitter",
-    lazy = false,
-    build = ":TSUpdate",
-  },
-
-  -- ansible-vim: https://github.com/pearofducks/ansible-vim
-  -- Preserve traditional Ansible syntax highlighting
-  {
-    "pearofducks/ansible-vim",
-    lazy = false,
-
-    init = function()
-      vim.g.ansible_extra_keywords_highlight = 1
-    end,
-  },
-
-
-  -- ------------------------------------------------------------
-  -- External Linting
-  -- ------------------------------------------------------------
-
-  -- nvim-lint: https://github.com/mfussenegger/nvim-lint
-  -- Run external linters through Neovim's diagnostic interface
-  {
-    "mfussenegger/nvim-lint",
-    lazy = false,
-  },
-
-
-  -- ------------------------------------------------------------
-  -- Helpers
-  -- ------------------------------------------------------------
-
-  -- nvim-lint: https://github.com/folke/which-key.nvim
-  -- Helps remember Neovim keymaps
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {
-      show_help = false,
-      icons = {
-        mappings = false,
-      },
-      replace = {
-        key = {
-          { "<Space>", "leader" },
-        },
-      },
-      {
-        keys = {
-          Space = "leader",
-          Esc = "Esc",
-          BS = "BS",
-          "<leader>?",
-          function()
-            require("which-key").show({ global = false })
-          end,
-          desc = "Buffer Local Keymaps (which-key)",
-        },
-      },
-    },
-  },
 
   -- conform: https://github.com/stevearc/conform.nvim
-  -- File formatter
+  -- Format selected filetypes with external formatters
   {
     "stevearc/conform.nvim",
+
     opts = {
       -- Format only explicitly selected filetypes
       formatters_by_ft = {
@@ -251,8 +136,8 @@ return {
         scss = { "prettier" },
         sh = { "shfmt" },
         terraform = { "tofu_fmt" },
-        zsh = { "shfmt" },
         ["terraform-vars"] = { "tofu_fmt" },
+        zsh = { "shfmt" },
       },
 
       -- Use project settings first, then personal XDG defaults
@@ -283,6 +168,7 @@ return {
             return {}
           end,
         },
+
         shfmt = {
           append_args = {
             "-ci",
@@ -291,6 +177,148 @@ return {
         },
       },
     },
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Fuzzy Finding
+  -- ------------------------------------------------------------
+
+  -- fzf: https://github.com/junegunn/fzf
+  -- Use the core Vim integration installed by Homebrew
+  {
+    dir = "/opt/homebrew/opt/fzf",
+    name = "fzf",
+    lazy = false,
+  },
+
+  -- fzf.vim: https://github.com/junegunn/fzf.vim
+  -- Provide fuzzy file, buffer, and text-search commands
+  {
+    "junegunn/fzf.vim",
+    dependencies = { "fzf" },
+    lazy = false,
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Git Integration
+  -- ------------------------------------------------------------
+
+  -- vim-fugitive: https://github.com/tpope/vim-fugitive
+  -- Provide Git status, blame, staging, and other Git commands
+  {
+    "tpope/vim-fugitive",
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Keybinding Help
+  -- ------------------------------------------------------------
+
+  -- which-key: https://github.com/folke/which-key.nvim
+  -- Display available keybindings after a configurable delay
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+
+    opts = {
+      -- Wait before displaying available keybindings
+      delay = 750,
+      show_help = false,
+
+      -- Disable mapping icons and use text for special keys
+      icons = {
+        mappings = false,
+        keys = {
+          BS = "BS",
+          Esc = "Esc",
+          Space = "leader",
+        },
+      },
+
+      -- Display Space as leader
+      replace = {
+        key = {
+          { "<Space>", "leader" },
+        },
+      },
+    },
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Language Server Protocol
+  -- ------------------------------------------------------------
+
+  -- nvim-lspconfig: https://github.com/neovim/nvim-lspconfig
+  -- Provide standard language server configurations for native LSP
+  {
+    "neovim/nvim-lspconfig",
+    lazy = false,
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Linting
+  -- ------------------------------------------------------------
+
+  -- nvim-lint: https://github.com/mfussenegger/nvim-lint
+  -- Run external linters through Neovim's diagnostic interface
+  {
+    "mfussenegger/nvim-lint",
+    lazy = false,
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Marks
+  -- ------------------------------------------------------------
+
+  -- vim-signature: https://github.com/kshenoy/vim-signature
+  -- Display and navigate Vim marks in the sign column
+  {
+    "kshenoy/vim-signature",
+    lazy = false,
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Surround
+  -- ------------------------------------------------------------
+
+  -- vim-surround: https://github.com/tpope/vim-surround
+  -- Add, change, and remove surrounding characters
+  -- Enable dot-repeat support for supported surround operations
+  {
+    "tpope/vim-surround",
+    dependencies = {
+      "tpope/vim-repeat",
+    },
+  },
+
+
+  -- ------------------------------------------------------------
+  -- Syntax Highlighting
+  -- ------------------------------------------------------------
+
+  -- ansible-vim: https://github.com/pearofducks/ansible-vim
+  -- Preserve traditional Ansible syntax highlighting
+  {
+    "pearofducks/ansible-vim",
+    lazy = false,
+
+    init = function()
+      vim.g.ansible_extra_keywords_highlight = 1
+    end,
+  },
+
+  -- nvim-treesitter: https://github.com/nvim-treesitter/nvim-treesitter
+  -- Manage Treesitter parsers for supported languages
+  {
+    "nvim-treesitter/nvim-treesitter",
+    lazy = false,
+    build = ":TSUpdate",
   },
 }
 
