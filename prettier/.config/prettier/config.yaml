@@ -1,0 +1,9 @@
+---
+printWidth: 100
+tabWidth: 2
+useTabs: false
+singleQuote: false
+proseWrap: preserve
+endOfLine: lf
+
+#  vim: ft=yaml ts=2 sts=2 sw=2 et
