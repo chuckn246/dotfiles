@@ -230,6 +230,68 @@ return {
       },
     },
   },
+
+  -- conform: https://github.com/stevearc/conform.nvim
+  -- File formatter
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      -- Format only explicitly selected filetypes
+      formatters_by_ft = {
+        bash = { "shfmt" },
+        css = { "prettier" },
+        go = { "gofmt" },
+        html = { "prettier" },
+        json = { "prettier" },
+        jsonc = { "prettier" },
+        lua = { "stylua" },
+        markdown = { "prettier" },
+        python = { "ruff_format" },
+        rust = { "rustfmt" },
+        scss = { "prettier" },
+        sh = { "shfmt" },
+        terraform = { "tofu_fmt" },
+        zsh = { "shfmt" },
+        ["terraform-vars"] = { "tofu_fmt" },
+      },
+
+      -- Use project settings first, then personal XDG defaults
+      formatters = {
+        prettier = {
+          prepend_args = function(_, ctx)
+            local config_home = vim.env.XDG_CONFIG_HOME
+              or (vim.env.HOME .. "/.config")
+            local config = config_home .. "/prettier/config.yaml"
+
+            -- Check whether Prettier can find a project configuration
+            local result = vim.fn.systemlist({
+              "prettier",
+              "--find-config-path",
+              ctx.filename,
+            })
+
+            if vim.v.shell_error == 0 and #result > 0 then
+              return {}
+            end
+
+            -- Fall back to the personal configuration
+            if vim.fn.filereadable(config) == 1 then
+              return { "--config", config }
+            end
+
+            -- Otherwise use Prettier's defaults
+            return {}
+          end,
+        },
+        shfmt = {
+          append_args = {
+            "-ci",
+            "-sr",
+          },
+        },
+      },
+    },
+  },
 }
 
 -- vim: ft=lua ts=2 sts=2 sw=2 et

@@ -61,6 +61,28 @@ end
 
 
 -- ------------------------------------------------------------
+-- Markdown Lint Configuration
+-- ------------------------------------------------------------
+
+-- Use XDG configuration for default Markdown linting rules
+local config_home = vim.fn.stdpath("config")
+local markdown_config = vim.fn.fnamemodify(config_home, ":h")
+  .. "/markdownlint/config.yaml"
+
+-- Preserve the built-in nvim-lint configuration
+local markdownlint = lint.linters["markdownlint-cli2"]
+
+-- Supply the global configuration when available
+if vim.fn.filereadable(markdown_config) == 1 then
+  markdownlint.args = {
+    "--config",
+    markdown_config,
+    "-",
+  }
+end
+
+
+-- ------------------------------------------------------------
 -- Lint Execution
 -- ------------------------------------------------------------
 

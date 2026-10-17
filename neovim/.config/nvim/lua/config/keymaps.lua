@@ -89,6 +89,21 @@ keymap("n", "<leader>pv", "<cmd>NvimTreeToggle<CR>", {
 
 
 -- ------------------------------------------------------------
+-- Formatting
+-- ------------------------------------------------------------
+
+-- Format the current buffer using its configured formatter
+keymap("n", "<leader>af", function()
+  require("conform").format({
+    async = true,
+    lsp_format = "never",
+  })
+end, {
+  desc = "Format buffer",
+})
+
+
+-- ------------------------------------------------------------
 -- FZF
 -- ------------------------------------------------------------
 
