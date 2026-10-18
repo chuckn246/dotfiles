@@ -36,6 +36,16 @@ fpath=(
 
 export PATH FPATH
 
+# EDITOR
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR="nvim"
+elif command -v vim >/dev/null 2>&1; then
+  export EDITOR="vim"
+fi
+
+export VISUAL="${EDITOR}"
+export SUDO_EDITOR="${EDITOR}"
+
 # Perl
 eval "$(perl -I"${XDG_DATA_HOME}/perl5/lib/perl5" -Mlocal::lib="${XDG_DATA_HOME}/perl5")"
 

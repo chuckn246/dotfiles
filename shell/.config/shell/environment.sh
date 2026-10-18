@@ -9,13 +9,7 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 export CURL_HOME="${XDG_CONFIG_HOME}/curl"
 
 # EDITOR
-if command -v nvim >/dev/null 2>&1; then
-    export EDITOR=nvim
-elif command -v vim >/dev/null 2>&1; then
-    export EDITOR=vim
-else
-    export EDITOR=vi
-fi
+export EDITOR=vi
 export VISUAL="${EDITOR}"
 export SUDO_EDITOR="${EDITOR}"
 
