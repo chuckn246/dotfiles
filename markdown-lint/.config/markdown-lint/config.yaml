@@ -1,5 +1,4 @@
 ---
-
 # Unordered list style
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md004.md
 MD004: false
@@ -27,6 +26,6 @@ MD030: false
 
 # Inline HTML
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
-MD033:
-  false
-  # allowed_elements: ["a", "img", "div"]
+MD033: false
+
+# vim: ft=yaml ts=2 sts=2 sw=2 et
