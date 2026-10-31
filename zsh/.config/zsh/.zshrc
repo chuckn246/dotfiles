@@ -174,6 +174,10 @@ if [[ -r "${ZDOTDIR}/lib/ssh.zsh" ]]; then
   source "${ZDOTDIR}/lib/ssh.zsh"
 fi
 
+# ------------------------------------------------------------
+# Other
+# ------------------------------------------------------------
+umask 022
 
 # Performance profiling output (uncomment to enable)
 # zprof

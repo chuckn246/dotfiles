@@ -19,7 +19,7 @@ shopt -s globstar 2>/dev/null || true
 shopt -s histappend 2>/dev/null || true
 
 # Set secure umask
-umask 027
+umask 022
 
 # GPG
 GPG_TTY=$(tty)

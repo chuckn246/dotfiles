@@ -50,7 +50,4 @@ export SUDO_EDITOR="${EDITOR}"
 # Perl
 eval "$(perl -I"${XDG_DATA_HOME}/perl5/lib/perl5" -Mlocal::lib="${XDG_DATA_HOME}/perl5")"
 
-# Extras
-umask 077
-
 # vim: ft=zsh ts=2 sts=2 sw=2 sr et
