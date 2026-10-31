@@ -18,6 +18,7 @@ local -a user_paths=(
   "${HOME}/.local/bin"
   "${CARGO_HOME}/bin"
   "${GOPATH}/bin"
+  "${RBENV_ROOT}/shims"
   "${XDG_DATA_HOME}/npm/bin"
   "${HOMEBREW_PREFIX}/opt/libpq/bin"
   "${HOMEBREW_PREFIX}/opt/mysql-client/bin"

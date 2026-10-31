@@ -48,7 +48,6 @@ export FNM_DIR="${XDG_DATA_HOME}/fnm"
 export NODE_REPL_HISTORY="${XDG_STATE_HOME}/node/repl_history"
 export NPM_CONFIG_CACHE="${XDG_CACHE_HOME}/npm"
 export NPM_CONFIG_PREFIX="${XDG_DATA_HOME}/npm"
-export NPM_CONFIG_PREFIX="${XDG_DATA_HOME}/npm"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 
 # PERL - cpanm build logs, tarball cache
@@ -72,6 +71,20 @@ export REDISCLI_HISTFILE="${XDG_STATE_HOME}/redis/history"
 
 # RIPGREP
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
+
+# RUBY
+export GEMRC="${XDG_CONFIG_HOME}/gem/gemrc"
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem/specs"
+export RBENV_ROOT="${XDG_DATA_HOME}/rbenv"
+
+# BUNDLER
+export BUNDLE_USER_HOME="${XDG_DATA_HOME}/bundle"
+export BUNDLE_USER_CACHE="${XDG_CACHE_HOME}/bundle"
+export BUNDLE_USER_CONFIG="${XDG_CONFIG_HOME}/bundle/config"
+export BUNDLE_USER_PLUGIN="${XDG_DATA_HOME}/bundle/plugin"
+
+# IRB
+export IRBRC="${XDG_CONFIG_HOME}/irb/irbrc"
 
 # RUST
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
