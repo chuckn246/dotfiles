@@ -36,6 +36,9 @@ vim.opt.rtp:prepend(lazypath)
 -- ------------------------------------------------------------
 
   require("lazy").setup({
+    -- Move lock file
+    lockfile = vim.fn.stdpath("state") .. "/lazy-lock.json",
+
     -- Load plugin specifications from lua/plugins/
     spec = {
       { import = "plugins" },
