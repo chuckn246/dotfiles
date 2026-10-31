@@ -5,7 +5,7 @@
 
 local function append_modeline()
   local modeline = string.format(
-    " vim: ft=%s ts=%d sts=%d sw=%d %set",
+    "vim: ft=%s ts=%d sts=%d sw=%d %set",
     vim.bo.filetype,
     vim.bo.tabstop,
     vim.bo.softtabstop,
@@ -13,22 +13,29 @@ local function append_modeline()
     vim.bo.expandtab and "" or "no"
   )
 
-  -- Wrap modeline in the current filetype's comment syntax
-  local commentstring = vim.bo.commentstring
+  -- Normalize spacing around the comment string
+  local before, after = vim.bo.commentstring:match("^(.-)%%s(.-)$")
 
-  if commentstring:find("%%s") then
-    modeline = commentstring:gsub("%%s", function()
-      return modeline
-    end)
+  if before then
+    before = before:gsub("%s+$", "")
+    after = after:gsub("^%s+", "")
+
+    modeline =
+      (before ~= "" and before .. " " or "")
+      .. modeline
+      .. (after ~= "" and " " .. after or "")
   end
 
-  -- Append blank line and modeline at EOF
-  vim.api.nvim_buf_set_lines(0, -1, -1, false, {
-    "",
-    modeline,
-  })
-end
+  -- Avoid adding an extra blank line
+  local last = vim.api.nvim_buf_line_count(0)
+  local tail = vim.api.nvim_buf_get_lines(0, last - 1, last, false)[1]
 
+  local new_lines = tail == ""
+      and { modeline }
+      or { "", modeline }
+
+  vim.api.nvim_buf_set_lines(0, -1, -1, false, new_lines)
+end
 
 -- ------------------------------------------------------------
 -- Module
