@@ -38,6 +38,9 @@ printf '[INFO] Running Node configuration\n'
 printf '[INFO] Running Perl configuration\n'
 "${REPO_ROOT}/bootstrap/install/perl.sh"
 
+printf '[INFO] Running Ruby configuration\n'
+"${REPO_ROOT}/bootstrap/install/ruby.sh"
+
 printf '[INFO] Running Rust configuration\n'
 "${REPO_ROOT}/bootstrap/install/rust.sh"
 
